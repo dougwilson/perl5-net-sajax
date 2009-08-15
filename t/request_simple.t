@@ -3,7 +3,7 @@
 use strict;
 use warnings 'all';
 
-use Test::More tests => 18;
+use Test::More tests => 20;
 use Test::Exception 0.03;
 use Test::MockObject;
 
@@ -128,6 +128,7 @@ my $sajax = new_ok('Net::SAJAX' => [
 		function  => 'Echo',
 		arguments => ['+:var array = [1,2,3]; array;'],
 	)}, 'Function returns array');
+	is(ref $data, 'ARRAY', 'Recieved ARRAYREF');
 	is_deeply($data, [1,2,3], 'Simple array');
 
 	# Function returning object
@@ -135,12 +136,13 @@ my $sajax = new_ok('Net::SAJAX' => [
 		function  => 'Echo',
 		arguments => ['+:var obj = {"version": 2, "snaps": "pop"}; obj;'],
 	)}, 'Function returns object');
-	is_deeply({%$data}, {version => 2, snaps => 'pop'}, 'Simple object');
+	is(ref $data, 'HASH', 'Recieved HASHREF');
+	is_deeply($data, {version => 2, snaps => 'pop'}, 'Simple object');
 
 	# Function returning array of objects
 	lives_ok(sub {$data = $sajax->call(
 		function  => 'Echo',
 		arguments => ['+:var arr = [{"a": 2, "b": "c"},{"d": 7, 40: "e"}]; arr;'],
 	)}, 'Function returns array of objects');
-	is_deeply([{%{$data->[0]}},{%{$data->[1]}}], [{a => 2, b => 'c'},{d => 7, 40 => 'e'}], 'Simple array of objects');
+	is_deeply($data, [{a => 2, b => 'c'},{d => 7, 40 => 'e'}], 'Simple array of objects');
 }

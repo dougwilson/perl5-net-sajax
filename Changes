@@ -1,4 +1,9 @@
 Revision history for Net-SAJAX
 
+0.100 Sat, August 15, 2009 01:43:02 -0500
+  * [API change] method call returns Perl scalar instead of JE object as
+    promised, and so should not break any code.
+  * Added repository and homepage links to META.
+
 0.001 Fri, August 14, 2009 14:50:12 -0500
   * First release.
