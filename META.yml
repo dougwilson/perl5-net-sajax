@@ -37,4 +37,4 @@ resources:
   homepage: http://github.com/dougwilson/perl5-net-sajax/
   license: http://dev.perl.org/licenses/
   repository: git://github.com/dougwilson/perl5-net-sajax.git
-version: 0.100
+version: 0.101
