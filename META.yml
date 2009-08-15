@@ -5,6 +5,7 @@ author:
 build_requires:
   ExtUtils::MakeMaker: 6.42
   Test::Exception: 0.03
+  Test::MockObject: 0
   Test::More: 0.41
 configure_requires:
   ExtUtils::MakeMaker: 6.42
