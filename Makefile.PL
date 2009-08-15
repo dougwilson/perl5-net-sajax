@@ -7,8 +7,9 @@ license  'perl';
 resources homepage   => 'http://github.com/dougwilson/perl5-net-sajax/';
 resources repository => 'git://github.com/dougwilson/perl5-net-sajax.git';
 
-build_requires 'Test::Exception' => '0.03';
-build_requires 'Test::More'      => '0.41';
+build_requires 'Test::Exception'  => '0.03';
+build_requires 'Test::MockObject' => 0;
+build_requires 'Test::More'       => '0.41';
 
 requires 'English'                   => 0;
 requires 'JE'                        => '0.033';
