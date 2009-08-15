@@ -159,7 +159,48 @@ sub call {
 		confess sprintf 'JavaScript error running code: %s', scalar $EVAL_ERROR;
 	}
 
-	return $data;
+	return $self->_unwrap_je_object($data);
+}
+
+###############################################################################
+# PRIVATE METHODS
+sub _unwrap_je_object {
+	my ($self, $je_object) = @_;
+
+	# Specify the HASH that maps object types with a subroutine that will
+	# convert the object into a Perl scalar.
+	my %object_value_map = (
+		'JE::Boolean'   => sub { return shift->value },
+		'JE::LValue'    => sub { return $self->_unwrap_je_object(shift->get) },
+		'JE::Null'      => sub { return shift->value },
+		'JE::Number'    => sub { return shift->value },
+		'JE::String'    => sub { return shift->value },
+		'JE::Undefined' => sub { return shift->value },
+		'JE::Object'    => sub {
+			my $hash_ref = shift->value;
+
+			# Iterate through each HASH element and unwrap the value
+			foreach my $key (keys %{$hash_ref}) {
+				$hash_ref->{$key} = $self->_unwrap_je_object($hash_ref->{$key});
+			}
+
+			return $hash_ref;
+		},
+		'JE::Object::Array'  => sub {
+			return [ map { $self->_unwrap_je_object($_) } @{shift->value} ];
+		},
+		'JE::Object::Number' => sub { return shift->value },
+		'JE::Object::RegExp' => sub { return shift->value },
+	);
+
+	# Get the code reference for converting the object
+	my $convert_coderef = $object_value_map{ref $je_object};
+
+	if (!defined $convert_coderef) {
+		confess sprintf 'Unable to unwrap %s', ref $je_object;
+	}
+
+	return $convert_coderef->($je_object);
 }
 
 ###############################################################################
@@ -295,11 +336,24 @@ constructed with no arguments.
 =head2 call
 
 This method will preform a call to a remote function using SAJAX. This will
-return a JE type. These types can be used just like normal Perl data values.
-Please see L<JE::Types> for a description of the public API for the data types.
-B<The return value of this function is subject to change to plain Perl data
-types in the future; version 0.100.> This method takes a HASH with the
-following keys:
+return a Perl scalar representing the returned data. Please note that this by
+returning a scalar, that includes references.
+
+  # call may return an ARRAYREF for an array
+  my $array_ref = $sajax->call(function => 'IReturnAnArray');
+  print 'Returned: ', join q{,}, @{$array_ref};
+
+  # call may return a HASHREF for an object
+  my $hash_ref = $sajax->call(function => 'IReturnAnObject');
+  print 'Error value: ', $hash_ref->{error};
+
+  # There may even be a property of an object that is an array
+  my $object = $sajax->call(function => 'GetProductInfo');
+  printf "Product: %s\nPrices: %s\n",
+    $object->{name},
+    join q{, }, @{$object->{prices}};
+
+This method takes a HASH with the following keys:
 
 =over
 
