@@ -20,6 +20,8 @@ README
 t/00-load.t
 t/attributes.t
 t/constructor.t
+t/lib/Test/Net/SAJAX/UserAgent.pm
+t/request_malformed.t
 t/request_simple.t
 t/request_url.t
 xt/clean-namespaces.t
