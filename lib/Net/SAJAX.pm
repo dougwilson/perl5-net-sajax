@@ -40,31 +40,36 @@ has autoclean_garbage => (
 	documentation => q{Whether or not to try automatic cleaning of garbage in the response},
 );
 has javascript_engine => (
-	is  => 'ro',
-	isa => 'JE',
-	default => sub { JE->new(max_ops => 1000) },
+	is            => 'ro',
+	isa           => 'JE',
+	default       => sub { JE->new(max_ops => 1000) },
+	documentation => q{JE object used for executing returned JavaScript},
 );
 has send_rand_key => (
-	is  => 'rw',
-	isa => 'Bool',
-	default => 0,
+	is            => 'rw',
+	isa           => 'Bool',
+	default       => 0,
+	documentation => q{Whether or not to send a random key with the request},
 );
 has target_id => (
-	is => 'rw',
-	isa => 'Str',
-	clearer   => 'clear_target_id',
-	predicate => 'has_target_id',
+	is            => 'rw',
+	isa           => 'Str',
+	clearer       => 'clear_target_id',
+	predicate     => 'has_target_id',
+	documentation => q{The target ID to send with the request},
 );
 has url => (
-	is  => 'rw',
-	isa => Uri,
-	coerce   => 1,
-	required => 1,
+	is            => 'rw',
+	isa           => Uri,
+	coerce        => 1,
+	required      => 1,
+	documentation => q{The URL to send the request to},
 );
 has user_agent => (
-	is  => 'rw',
-	isa => 'LWP::UserAgent',
-	default => sub { LWP::UserAgent->new },
+	is            => 'rw',
+	isa           => 'LWP::UserAgent',
+	default       => sub { LWP::UserAgent->new },
+	documentation => q{The user agent that will be used to make the requests},
 );
 
 ###############################################################################
