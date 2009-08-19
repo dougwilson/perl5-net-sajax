@@ -4,7 +4,7 @@ use lib 't/lib';
 use strict;
 use warnings 'all';
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Test::Exception 0.03;
 use Test::Net::SAJAX::UserAgent;
 
@@ -35,4 +35,16 @@ my $sajax = new_ok('Net::SAJAX' => [
 		function  => 'Echo',
 		arguments => ["<html><head>\n\n+:var res='test'; res;"],
 	), 'test')}, 'Cleaned HTML at beginning');
+}
+
+###########################################################################
+# REQUEST WITH LOTS OF PHP GARBAGE
+{
+	# Enable autocleaning
+	$sajax->autoclean_garbage(1);
+
+	lives_and(sub {is($sajax->call(
+		function  => 'Echo',
+		arguments => ["<html><head>\n\n<body>+:var res='test'; res;</body></html>"],
+	), 'test')}, 'Lots of garbage with PHP response');
 }

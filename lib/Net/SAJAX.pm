@@ -149,18 +149,8 @@ sub call {
 		confess 'An error occurred in the response';
 	}
 
-	my ($status, $data);
-
-	# Trim leading and trailing whitespace and get the status and data
-	if ($self->autoclean_garbage) {
-		($status, $data) = $response->content
-			=~ m{^ \s* ([+-]) : (.*?) \s* \z}msx;
-	}
-
-	if (!defined $status) {
-		($status, $data) = $response->content
-			=~ m{\A \s* (.) . (.*?) \s* \z}msx;
-	}
+	# Get the status and data from the response
+	my ($status, $data) = $self->_parse_data_from_response($response);
 
 	if (!defined $status) {
 		# The response was bad
@@ -184,6 +174,31 @@ sub call {
 
 ###############################################################################
 # PRIVATE METHODS
+sub _parse_data_from_response {
+	my ($self, $response) = @_;
+
+	# Copy the content for manipulation
+	my $content = $response->content;
+
+	if ($self->autoclean_garbage) {
+		# Clean out garbage found at the beginning
+		if ($content =~ m{^ \s* ([+-] : .*) \z}msx) {
+			$content = $1;
+		}
+
+		# For the PHP SAJAX, attempt to parse out the exact response
+		if ($content =~ m{([+-] : var \s res \s? = \s? .*? ; \s? res;)}msx) {
+			$content = $1;
+		}
+	}
+
+	# Parse out the status and data from the content
+	my ($status, $data) = $content
+		=~ m{\A \s* (.) . (.*?) \s* \z}msx;
+
+	# Return the status and data as an array
+	return ($status, $data);
+}
 sub _unwrap_je_object {
 	my ($self, $je_object) = @_;
 
