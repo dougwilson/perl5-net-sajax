@@ -22,6 +22,7 @@ t/attributes.t
 t/constructor.t
 t/lib/Test/Net/SAJAX/UserAgent.pm
 t/request_complex.t
+t/request_garbage.t
 t/request_malformed.t
 t/request_simple.t
 t/request_url.t

@@ -33,6 +33,12 @@ use namespace::clean 0.04 -except => [qw(meta)];
 
 ###############################################################################
 # ATTRIBUTES
+has autoclean_garbage => (
+	is            => 'rw',
+	isa           => 'Bool',
+	default       => 0,
+	documentation => q{Whether or not to try automatic cleaning of garbage in the response},
+);
 has javascript_engine => (
 	is  => 'ro',
 	isa => 'JE',
@@ -138,9 +144,18 @@ sub call {
 		confess 'An error occurred in the response';
 	}
 
+	my ($status, $data);
+
 	# Trim leading and trailing whitespace and get the status and data
-	my ($status, $data) = $response->content
-		=~ m{\A \s* (.) . (.*?) \s* \z}msx;
+	if ($self->autoclean_garbage) {
+		($status, $data) = $response->content
+			=~ m{^ \s* ([+-]) : (.*?) \s* \z}msx;
+	}
+
+	if (!defined $status) {
+		($status, $data) = $response->content
+			=~ m{\A \s* (.) . (.*?) \s* \z}msx;
+	}
 
 	if (!defined $status) {
 		# The response was bad
@@ -278,6 +293,16 @@ L</ATTRIBUTES> section).
 =back
 
 =head1 ATTRIBUTES
+
+=head2 autoclean_garbage
+
+B<Added in version 0.102>; be sure to require this version for this feature.
+
+This is a Boolean of whether or not to try and automatically clean any garbage
+from the SAJAX response. Sometime there are just bad web programmers out there
+and there may be HTML or other data above the SAJAX response (most common in
+PHP applications). If the stripping fails, then it will work just like normal.
+The default value is 0, which will mimic the expected SAJAX behavior.
 
 =head2 javascript_engine
 
