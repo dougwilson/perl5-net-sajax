@@ -486,6 +486,27 @@ the method is assumed to be C<"GET">, as this is the most common SAJAX method.
 
 =back
 
+=head1 DIAGNOSTICS
+
+This module, as of version 0.102, will throw L<Net::SAJAX::Exception> objects
+on errors. This means that all method return values are guaranteed to be
+correct. Please read the relevant exception classes to find out what objects
+will be thrown.
+
+=over
+
+=item * L<Net::SAJAX::Exception>
+
+=item * L<Net::SAJAX::Exception::JavaScriptEvaluation>
+
+=item * L<Net::SAJAX::Exception::MethodArguments>
+
+=item * L<Net::SAJAX::Exception::RemoteError>
+
+=item * L<Net::SAJAX::Exception::Response>
+
+=back
+
 =head1 VERSION NUMBER GUARANTEE
 
 This module has a version number in the format of C<< \d+\.\d{3} >>. When the
