@@ -11,6 +11,7 @@ build_requires 'Test::Exception'  => '0.03';
 build_requires 'Test::MockObject' => 0;
 build_requires 'Test::More'       => '0.41';
 
+requires 'Carp'                      => 0;
 requires 'English'                   => 0;
 requires 'JE'                        => '0.033';
 requires 'List::MoreUtils'           => 0;
