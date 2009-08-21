@@ -64,6 +64,14 @@ sub throw {
 	# Prefix this class to the beginning of the exception class
 	$exception_class = sprintf '%s::%s', $class, $exception_class;
 
+	if ($exception_class !~ m{\A \w+ (?: :: \w+)* \z}imsx) {
+		# The class name doesn't seem good, so toss it because we don't want
+		# to be evaulating bad code.
+		croak $class->new(
+			message => 'The provided class name seemed like a bad name',
+		);
+	}
+
 	# Attempt to load the exception class
 	## no critic qw(BuiltinFunctions::ProhibitStringyEval)
 	if (!eval "use $exception_class; 1") {
