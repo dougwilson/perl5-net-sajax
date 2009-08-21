@@ -389,6 +389,10 @@ and there may be HTML or other data above the SAJAX response (most common in
 PHP applications). If the stripping fails, then it will work just like normal.
 The default value is 0, which will mimic the expected SAJAX behavior.
 
+=head2 has_target_id
+
+This is a Boolean of whether or not the object has a L</target_id> set.
+
 =head2 javascript_engine
 
 This is a L<JE> object that is used to evaluate the JavaScript data recieved.
@@ -485,6 +489,11 @@ This is a string that is either C<"GET"> or C<"POST">. If not supplied, then
 the method is assumed to be C<"GET">, as this is the most common SAJAX method.
 
 =back
+
+=head2 clear_target_id
+
+This will clear out the L</target_id> set for this object which will cause the
+object to no longer send a L</target_id> with the request.
 
 =head1 DIAGNOSTICS
 
