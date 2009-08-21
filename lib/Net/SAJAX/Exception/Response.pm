@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.101';
+our $VERSION   = '0.102';
 
 ###############################################################################
 # MOOSE
@@ -46,7 +46,7 @@ during reading of the response
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX::Exception::Response> version 0.101
+This documentation refers to L<Net::SAJAX::Exception::Response> version 0.102
 
 =head1 SYNOPSIS
 

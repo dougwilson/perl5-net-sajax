@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.101';
+our $VERSION   = '0.102';
 
 ###############################################################################
 # MOOSE
@@ -317,7 +317,7 @@ Net::SAJAX - Interact with remote applications that use SAJAX.
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX> version 0.101
+This documentation refers to L<Net::SAJAX> version 0.102
 
 =head1 SYNOPSIS
 
@@ -491,7 +491,8 @@ the method is assumed to be C<"GET">, as this is the most common SAJAX method.
 This module, as of version 0.102, will throw L<Net::SAJAX::Exception> objects
 on errors. This means that all method return values are guaranteed to be
 correct. Please read the relevant exception classes to find out what objects
-will be thrown.
+will be thrown. Depend on at least 0.102 if you want to use object-based
+exception.
 
 =over
 
