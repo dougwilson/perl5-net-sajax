@@ -20,10 +20,12 @@ use MooseX::Types::URI 0.02 qw(Uri);
 
 ###############################################################################
 # MODULE IMPORTS
+use Carp qw(croak);
 use English qw(-no_match_vars);
 use JE 0.033;
 use List::MoreUtils qw(any);
 use LWP::UserAgent 5.819;
+use Net::SAJAX::Exception;
 use URI 1.22;
 use URI::QueryParam;
 
@@ -86,7 +88,13 @@ sub call {
 
 	if (!defined $function) {
 		# No function was specified
-		confess 'No function was specified to call';
+		Net::SAJAX::Exception->throw(
+			class          => 'MethodArguments',
+			argument       => 'function',
+			argument_value => $function,
+			message        => 'No function was specified to call',
+			method         => 'call',
+		);
 	}
 
 	# Change the method to uppercase
@@ -94,18 +102,36 @@ sub call {
 
 	if ($method ne 'GET' && $method ne 'POST') {
 		# SAJAX only supports GET and POST
-		confess 'SAJAX only supports the GET and POST methods';
+		Net::SAJAX::Exception->throw(
+			class          => 'MethodArguments',
+			argument       => 'method',
+			argument_value => $method,
+			message        => 'SAJAX only supports the GET and POST methods',
+			method         => 'call',
+		);
 	}
 
 	if (defined $arguments) {
 		if (ref $arguments ne 'ARRAY') {
 			# Arguments must refer to an ARRAYREF
-			confess 'Must pass arguments as an ARRAYREF';
+			Net::SAJAX::Exception->throw(
+				class          => 'MethodArguments',
+				argument       => 'arguments',
+				argument_value => $arguments,
+				message        => 'Must pass arguments as an ARRAYREF',
+				method         => 'call',
+			);
 		}
 
 		if(any {ref $_ ne q{}} @{$arguments}) {
 			# No argument can be a reference
-			confess 'No arguments can be a reference';
+			Net::SAJAX::Exception->throw(
+				class          => 'MethodArguments',
+				argument       => 'arguments',
+				argument_value => $arguments,
+				message        => 'No arguments can be a reference',
+				method         => 'call',
+			);
 		}
 	}
 
@@ -146,30 +172,56 @@ sub call {
 
 	if (!$response->is_success) {
 		# The response was not successful
-		confess 'An error occurred in the response';
+		Net::SAJAX::Exception->throw(
+			class    => 'Response',
+			message  => 'An error occurred in the response',
+			response => $response,
+		);
 	}
 
 	# Get the status and data from the response
 	my ($status, $data) = $self->_parse_data_from_response($response);
 
-	if (!defined $status) {
-		# The response was bad
-		confess 'Recieved a bad response';
-	}
-	elsif ($status eq q{-}) {
+	if ($status eq q{-}) {
 		# This is an error
-		confess 'Recieved error message: ' . $data;
+		Net::SAJAX::Exception->throw(
+			class   => 'RemoteError',
+			message => $data,
+		);
 	}
 
 	# Evaluate the data
-	$data = $self->javascript_engine->eval($data);
+	my $je_object = $self->javascript_engine->eval($data);
 
 	if ($EVAL_ERROR) {
 		# JavaScript error when running code
-		confess sprintf 'JavaScript error running code: %s', scalar $EVAL_ERROR;
+		Net::SAJAX::Exception->throw(
+			class             => 'JavsScriptEvaluation',
+			javascript_error  => $EVAL_ERROR,
+			javascript_string => $data,
+			message           => 'JavaScript error occurred while running code',
+		);
 	}
 
-	return $self->_unwrap_je_object($data);
+	# Get the perl data structure
+	my $perl_ref = eval { $self->_unwrap_je_object($je_object) };
+
+	if ($EVAL_ERROR) {
+		# An error occurred while expanding the JavaScript structure.
+		if (blessed $EVAL_ERROR eq 'Net::SAJAX::Exception::JavaScriptConversion') {
+			# Rethrow the error but with the over all JE object
+			Net::SAJAX::Exception->throw(
+				class             => 'JavaScriptConversion',
+				javascript_object => $data,
+				message           => 'Failed converting JavaScript object to Perl',
+			);
+		}
+		else {
+			corak $EVAL_ERROR;
+		}
+	}
+
+	return $perl_ref;
 }
 
 ###############################################################################
@@ -195,6 +247,15 @@ sub _parse_data_from_response {
 	# Parse out the status and data from the content
 	my ($status, $data) = $content
 		=~ m{\A \s* (.) . (.*?) \s* \z}msx;
+
+	if (!defined $status || !defined $data) {
+		# The response was bad
+		Net::SAJAX::Exception->throw(
+			class    => 'Response',
+			message  => 'Recieved a bad response',
+			response => $response,
+		);
+	}
 
 	# Return the status and data as an array
 	return ($status, $data);
@@ -232,7 +293,11 @@ sub _unwrap_je_object {
 	my $convert_coderef = $object_value_map{ref $je_object};
 
 	if (!defined $convert_coderef) {
-		confess sprintf 'Unable to unwrap %s', ref $je_object;
+		Net::SAJAX::Exception->throw(
+			class             => 'JavaScriptConversion',
+			javascript_object => $je_object,
+			message           => 'Failed converting JavaScript object to Perl',
+		);
 	}
 
 	return $convert_coderef->($je_object);

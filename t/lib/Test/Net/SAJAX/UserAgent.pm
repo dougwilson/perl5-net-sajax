@@ -108,6 +108,21 @@ sub _any_Echo {
 		response => HTTP::Response->new(200, 'OK', undef, $arguments[0]),
 	};
 }
+sub _any_EchoStatus {
+	my %args = @_;
+
+	my @arguments = @{$args{arguments}};
+
+	my $status = 200;
+
+	if (@arguments) {
+		$status = $arguments[0];
+	}
+
+	return {
+		response => HTTP::Response->new($status, '?????', undef, "+:var res = $status; res;"),
+	};
+}
 sub _any_EchoUrl {
 	my %args = @_;
 
