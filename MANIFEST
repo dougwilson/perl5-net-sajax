@@ -10,6 +10,11 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/Net/SAJAX.pm
+lib/Net/SAJAX/Exception.pm
+lib/Net/SAJAX/Exception/JavaScriptEvaluation.pm
+lib/Net/SAJAX/Exception/MethodArguments.pm
+lib/Net/SAJAX/Exception/RemoteError.pm
+lib/Net/SAJAX/Exception/Response.pm
 lib/Net/SAJAX/UpdatingCode.pod
 lib/Net/SAJAX/VersionGuarantee.pod
 Makefile.PL
@@ -20,6 +25,11 @@ README
 t/00-load.t
 t/attributes.t
 t/constructor.t
+t/lib/Test/Net/SAJAX/UserAgent.pm
+t/request_complex.t
+t/request_diagnostic.t
+t/request_garbage.t
+t/request_malformed.t
 t/request_simple.t
 t/request_url.t
 xt/clean-namespaces.t

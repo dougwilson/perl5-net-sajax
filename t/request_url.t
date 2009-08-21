@@ -1,69 +1,20 @@
 #!perl -T
 
+use lib 't/lib';
 use strict;
 use warnings 'all';
 
 use Test::More tests => 7;
 use Test::Exception 0.03;
-use Test::MockObject;
-
-use HTTP::Response;
-use URI;
-use URI::QueryParam;
-
-###########################################################################
-# CREATE A MOCK USER AGENT
-my $fake_ua = Test::MockObject->new;
-
-my $process_request = sub {
-	my ($function, $arguments, $url) = @_;
-
-	my $response;
-
-	# Change URL into a URI object
-	$url = URI->new($url);
-
-	if ($function eq 'EchoUrl') {
-		$response = HTTP::Response->new(200, 'OK', undef, "+:var url = '$url'; url;");
-	}
-	else {
-		$response = HTTP::Response->new(200, 'OK', undef, "-:$function not callable");
-	}
-
-	return $response;
-};
-
-# Mock the get request
-$fake_ua->mock(get => sub {
-	my ($self, $url) = @_;
-
-	# Get the called function name
-	my $function  = $url->query_param('rs');
-	my @arguments = $url->query_param('rsargs[]');
-
-	return $process_request->($function, \@arguments, $url);
-});
-
-$fake_ua->mock(post => sub {
-	my ($self, $url, $post_data) = @_;
-
-	# Get the called function name
-	my $function  = $post_data->{rs};
-	my $arguments = $post_data->{'rsargs[]'};
-
-	return $process_request->($function, $arguments, $url);
-});
-
-# Say the fake user agent is a LWP::UserAgent
-$fake_ua->set_isa('LWP::UserAgent');
+use Test::Net::SAJAX::UserAgent;
 
 use Net::SAJAX;
 
 ###########################################################################
 # CONSTRUCT SAJAX OBJECT
 my $sajax = new_ok('Net::SAJAX' => [
-	url => 'http://example.net/app.php',
-	user_agent => $fake_ua,
+	url        => 'http://example.net/app.php',
+	user_agent => Test::Net::SAJAX::UserAgent->new,
 ], 'Object creation');
 
 ###########################################################################

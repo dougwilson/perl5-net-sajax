@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.101';
+our $VERSION   = '0.102';
 
 ###############################################################################
 # MOOSE
@@ -20,10 +20,12 @@ use MooseX::Types::URI 0.02 qw(Uri);
 
 ###############################################################################
 # MODULE IMPORTS
+use Carp qw(croak);
 use English qw(-no_match_vars);
 use JE 0.033;
 use List::MoreUtils qw(any);
 use LWP::UserAgent 5.819;
+use Net::SAJAX::Exception;
 use URI 1.22;
 use URI::QueryParam;
 
@@ -33,32 +35,43 @@ use namespace::clean 0.04 -except => [qw(meta)];
 
 ###############################################################################
 # ATTRIBUTES
+has autoclean_garbage => (
+	is            => 'rw',
+	isa           => 'Bool',
+	default       => 0,
+	documentation => q{Whether or not to try automatic cleaning of garbage in the response},
+);
 has javascript_engine => (
-	is  => 'ro',
-	isa => 'JE',
-	default => sub { JE->new(max_ops => 1000) },
+	is            => 'ro',
+	isa           => 'JE',
+	default       => sub { JE->new(max_ops => 1000) },
+	documentation => q{JE object used for executing returned JavaScript},
 );
 has send_rand_key => (
-	is  => 'rw',
-	isa => 'Bool',
-	default => 0,
+	is            => 'rw',
+	isa           => 'Bool',
+	default       => 0,
+	documentation => q{Whether or not to send a random key with the request},
 );
 has target_id => (
-	is => 'rw',
-	isa => 'Str',
-	clearer   => 'clear_target_id',
-	predicate => 'has_target_id',
+	is            => 'rw',
+	isa           => 'Str',
+	clearer       => 'clear_target_id',
+	predicate     => 'has_target_id',
+	documentation => q{The target ID to send with the request},
 );
 has url => (
-	is  => 'rw',
-	isa => Uri,
-	coerce   => 1,
-	required => 1,
+	is            => 'rw',
+	isa           => Uri,
+	coerce        => 1,
+	required      => 1,
+	documentation => q{The URL to send the request to},
 );
 has user_agent => (
-	is  => 'rw',
-	isa => 'LWP::UserAgent',
-	default => sub { LWP::UserAgent->new },
+	is            => 'rw',
+	isa           => 'LWP::UserAgent',
+	default       => sub { LWP::UserAgent->new },
+	documentation => q{The user agent that will be used to make the requests},
 );
 
 ###############################################################################
@@ -75,7 +88,13 @@ sub call {
 
 	if (!defined $function) {
 		# No function was specified
-		confess 'No function was specified to call';
+		Net::SAJAX::Exception->throw(
+			class          => 'MethodArguments',
+			argument       => 'function',
+			argument_value => $function,
+			message        => 'No function was specified to call',
+			method         => 'call',
+		);
 	}
 
 	# Change the method to uppercase
@@ -83,18 +102,36 @@ sub call {
 
 	if ($method ne 'GET' && $method ne 'POST') {
 		# SAJAX only supports GET and POST
-		confess 'SAJAX only supports the GET and POST methods';
+		Net::SAJAX::Exception->throw(
+			class          => 'MethodArguments',
+			argument       => 'method',
+			argument_value => $method,
+			message        => 'SAJAX only supports the GET and POST methods',
+			method         => 'call',
+		);
 	}
 
 	if (defined $arguments) {
 		if (ref $arguments ne 'ARRAY') {
 			# Arguments must refer to an ARRAYREF
-			confess 'Must pass arguments as an ARRAYREF';
+			Net::SAJAX::Exception->throw(
+				class          => 'MethodArguments',
+				argument       => 'arguments',
+				argument_value => $arguments,
+				message        => 'Must pass arguments as an ARRAYREF',
+				method         => 'call',
+			);
 		}
 
 		if(any {ref $_ ne q{}} @{$arguments}) {
 			# No argument can be a reference
-			confess 'No arguments can be a reference';
+			Net::SAJAX::Exception->throw(
+				class          => 'MethodArguments',
+				argument       => 'arguments',
+				argument_value => $arguments,
+				message        => 'No arguments can be a reference',
+				method         => 'call',
+			);
 		}
 	}
 
@@ -135,35 +172,94 @@ sub call {
 
 	if (!$response->is_success) {
 		# The response was not successful
-		confess 'An error occurred in the response';
+		Net::SAJAX::Exception->throw(
+			class    => 'Response',
+			message  => 'An error occurred in the response',
+			response => $response,
+		);
 	}
 
-	# Trim leading and trailing whitespace and get the status and data
-	my ($status, $data) = $response->content
-		=~ m{\A \s* (.) . (.*?) \s* \z}msx;
+	# Get the status and data from the response
+	my ($status, $data) = $self->_parse_data_from_response($response);
 
-	if (!defined $status) {
-		# The response was bad
-		confess 'Recieved a bad response';
-	}
-	elsif ($status eq q{-}) {
+	if ($status eq q{-}) {
 		# This is an error
-		confess 'Recieved error message: ' . $data;
+		Net::SAJAX::Exception->throw(
+			class   => 'RemoteError',
+			message => $data,
+		);
 	}
 
 	# Evaluate the data
-	$data = $self->javascript_engine->eval($data);
+	my $je_object = $self->javascript_engine->eval($data);
 
 	if ($EVAL_ERROR) {
 		# JavaScript error when running code
-		confess sprintf 'JavaScript error running code: %s', scalar $EVAL_ERROR;
+		Net::SAJAX::Exception->throw(
+			class             => 'JavaScriptEvaluation',
+			javascript_error  => $EVAL_ERROR,
+			javascript_string => $data,
+			message           => 'JavaScript error occurred while running code',
+		);
 	}
 
-	return $self->_unwrap_je_object($data);
+	# Get the perl data structure
+	my $perl_ref = eval { $self->_unwrap_je_object($je_object) };
+
+	if ($EVAL_ERROR) {
+		# An error occurred while expanding the JavaScript structure.
+		if (blessed $EVAL_ERROR eq 'Net::SAJAX::Exception::JavaScriptConversion') {
+			# Rethrow the error but with the over all JE object
+			Net::SAJAX::Exception->throw(
+				class             => 'JavaScriptConversion',
+				javascript_object => $data,
+				message           => 'Failed converting JavaScript object to Perl',
+			);
+		}
+		else {
+			corak $EVAL_ERROR;
+		}
+	}
+
+	return $perl_ref;
 }
 
 ###############################################################################
 # PRIVATE METHODS
+sub _parse_data_from_response {
+	my ($self, $response) = @_;
+
+	# Copy the content for manipulation
+	my $content = $response->content;
+
+	if ($self->autoclean_garbage) {
+		# Clean out garbage found at the beginning
+		if ($content =~ m{^ \s* ([+-] : .*) \z}msx) {
+			$content = $1;
+		}
+
+		# For the PHP SAJAX, attempt to parse out the exact response
+		if ($content =~ m{([+-] : var \s res \s? = \s? .*? ; \s? res;)}msx) {
+			$content = $1;
+		}
+	}
+
+	# Parse out the status and data from the content
+	my ($status, $data) = $content
+		=~ m{\A \s* (.) . (.*?) \s* \z}msx;
+
+	if (!defined $status || !defined $data) {
+		# The response was bad
+		Net::SAJAX::Exception->throw(
+			class    => 'Response',
+			message  => 'Recieved a bad response',
+			response => $response,
+		);
+	}
+
+	# Return the status and data as an array
+	return ($status, $data);
+}
 sub _unwrap_je_object {
 	my ($self, $je_object) = @_;
 
@@ -197,7 +293,11 @@ sub _unwrap_je_object {
 	my $convert_coderef = $object_value_map{ref $je_object};
 
 	if (!defined $convert_coderef) {
-		confess sprintf 'Unable to unwrap %s', ref $je_object;
+		Net::SAJAX::Exception->throw(
+			class             => 'JavaScriptConversion',
+			javascript_object => $je_object,
+			message           => 'Failed converting JavaScript object to Perl',
+		);
 	}
 
 	return $convert_coderef->($je_object);
@@ -217,7 +317,7 @@ Net::SAJAX - Interact with remote applications that use SAJAX.
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX> version 0.101
+This documentation refers to L<Net::SAJAX> version 0.102
 
 =head1 SYNOPSIS
 
@@ -278,6 +378,16 @@ L</ATTRIBUTES> section).
 =back
 
 =head1 ATTRIBUTES
+
+=head2 autoclean_garbage
+
+B<Added in version 0.102>; be sure to require this version for this feature.
+
+This is a Boolean of whether or not to try and automatically clean any garbage
+from the SAJAX response. Sometime there are just bad web programmers out there
+and there may be HTML or other data above the SAJAX response (most common in
+PHP applications). If the stripping fails, then it will work just like normal.
+The default value is 0, which will mimic the expected SAJAX behavior.
 
 =head2 javascript_engine
 
@@ -373,6 +483,28 @@ This is a string with the function name to call.
 
 This is a string that is either C<"GET"> or C<"POST">. If not supplied, then
 the method is assumed to be C<"GET">, as this is the most common SAJAX method.
+
+=back
+
+=head1 DIAGNOSTICS
+
+This module, as of version 0.102, will throw L<Net::SAJAX::Exception> objects
+on errors. This means that all method return values are guaranteed to be
+correct. Please read the relevant exception classes to find out what objects
+will be thrown. Depend on at least 0.102 if you want to use object-based
+exception.
+
+=over
+
+=item * L<Net::SAJAX::Exception>
+
+=item * L<Net::SAJAX::Exception::JavaScriptEvaluation>
+
+=item * L<Net::SAJAX::Exception::MethodArguments>
+
+=item * L<Net::SAJAX::Exception::RemoteError>
+
+=item * L<Net::SAJAX::Exception::Response>
 
 =back
 
