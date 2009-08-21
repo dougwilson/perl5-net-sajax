@@ -69,6 +69,6 @@ my $sajax = new_ok('Net::SAJAX' => [
 {
 	throws_ok
 		{ $sajax->call(function => 'Echo', arguments => ['ia@#saf sdafuwbgf']) }
-		'Net::SAJAX::Exception::JavsScriptEvaluation',
+		'Net::SAJAX::Exception::JavaScriptEvaluation',
 		'Invalid JavaScript causes an exception';
 }

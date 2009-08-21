@@ -1,4 +1,4 @@
-package Net::SAJAX::Exception::JavsScriptEvaluation;
+package Net::SAJAX::Exception::JavaScriptEvaluation;
 
 use 5.008003;
 use strict;
@@ -47,19 +47,19 @@ __END__
 
 =head1 NAME
 
-Net::SAJAX::Exception::JavsScriptEvaluation - Exception object for exceptions
+Net::SAJAX::Exception::JavaScriptEvaluation - Exception object for exceptions
 that occur when evaluating JavaScript.
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX::Exception::JavsScriptEvaluation>
+This documentation refers to L<Net::SAJAX::Exception::JavaScriptEvaluation>
 version 0.101
 
 =head1 SYNOPSIS
 
-  use Net::SAJAX::Exception::JavsScriptEvaluation;
+  use Net::SAJAX::Exception::JavaScriptEvaluation;
 
-  Net::SAJAX::Exception::JavsScriptEvaluation->throw(
+  Net::SAJAX::Exception::JavaScriptEvaluation->throw(
     message           => 'This is some error message',
     javascript_error  => $je_error_object,
     javascript_string => $javascript,

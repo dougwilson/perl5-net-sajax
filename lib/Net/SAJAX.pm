@@ -196,7 +196,7 @@ sub call {
 	if ($EVAL_ERROR) {
 		# JavaScript error when running code
 		Net::SAJAX::Exception->throw(
-			class             => 'JavsScriptEvaluation',
+			class             => 'JavaScriptEvaluation',
 			javascript_error  => $EVAL_ERROR,
 			javascript_string => $data,
 			message           => 'JavaScript error occurred while running code',

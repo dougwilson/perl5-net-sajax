@@ -11,7 +11,7 @@ inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/Net/SAJAX.pm
 lib/Net/SAJAX/Exception.pm
-lib/Net/SAJAX/Exception/JavsScriptEvaluation.pm
+lib/Net/SAJAX/Exception/JavaScriptEvaluation.pm
 lib/Net/SAJAX/Exception/MethodArguments.pm
 lib/Net/SAJAX/Exception/RemoteError.pm
 lib/Net/SAJAX/Exception/Response.pm
