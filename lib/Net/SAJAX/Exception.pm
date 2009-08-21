@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.101';
+our $VERSION   = '0.102';
 
 ###############################################################################
 # MOOSE
@@ -98,7 +98,7 @@ Net::SAJAX::Exception - Basic exception object for Net::SAJAX
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX::Exception> version 0.101
+This documentation refers to L<Net::SAJAX::Exception> version 0.102
 
 =head1 SYNOPSIS
 

@@ -1,5 +1,12 @@
 Revision history for Net-SAJAX
 
+0.102 Fri, August 21, 2009 12:52:07 -0500
+  * [New] Net::SAJAX has a new attribute "autoclean_garbage" that when set
+    will attempt to clean garbage from a SAJAX response due to bad server
+    programming.
+  * [API change] Exceptions are no longer strings, but objects. The objects
+    will stringify to their former string representation.
+
 0.101 Sat, August 15, 2009 13:32:54 -0500
   * Added forgotten dependency on Test::MockObject for the build process.
 

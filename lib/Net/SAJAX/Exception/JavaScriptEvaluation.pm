@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.101';
+our $VERSION   = '0.102';
 
 ###############################################################################
 # MOOSE
@@ -53,7 +53,7 @@ that occur when evaluating JavaScript.
 =head1 VERSION
 
 This documentation refers to L<Net::SAJAX::Exception::JavaScriptEvaluation>
-version 0.101
+version 0.102
 
 =head1 SYNOPSIS
 
