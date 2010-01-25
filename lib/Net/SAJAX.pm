@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.103';
+our $VERSION   = '0.104';
 
 ###############################################################################
 # MOOSE
@@ -248,7 +248,7 @@ sub _parse_data_from_response {
 	my ($status, $data) = $content
 		=~ m{\A \s* (.) . (.*?) \s* \z}msx;
 
-	if (!defined $status || !defined $data) {
+	if (!defined $status) {
 		# The response was bad
 		Net::SAJAX::Exception->throw(
 			class    => 'Response',
@@ -285,8 +285,11 @@ sub _unwrap_je_object {
 		'JE::Object::Array'  => sub {
 			return [ map { $self->_unwrap_je_object($_) } @{shift->value} ];
 		},
-		'JE::Object::Number' => sub { return shift->value },
-		'JE::Object::RegExp' => sub { return shift->value },
+		'JE::Object::Boolean' => sub { return shift->value },
+		'JE::Object::Date'    => sub { return "$_[0]" },
+		'JE::Object::Number'  => sub { return shift->value },
+		'JE::Object::RegExp'  => sub { return shift->value },
+		'JE::Object::String'  => sub { return shift->value },
 	);
 
 	# Get the code reference for converting the object
@@ -317,7 +320,7 @@ Net::SAJAX - Interact with remote applications that use SAJAX.
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX> version 0.103
+This documentation refers to L<Net::SAJAX> version 0.104
 
 =head1 SYNOPSIS
 

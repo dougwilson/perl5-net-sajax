@@ -26,6 +26,7 @@ README
 t/00-load.t
 t/attributes.t
 t/constructor.t
+t/javascript_types.t
 t/lib/Test/Net/SAJAX/UserAgent.pm
 t/request_complex.t
 t/request_diagnostic.t

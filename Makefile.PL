@@ -12,7 +12,7 @@ resources repository => 'git://github.com/dougwilson/perl5-net-sajax.git';
 # Modules that are required
 requires
 	'Carp'                      => 0,
-	'English'                   => 0;
+	'English'                   => 0,
 	'JE'                        => '0.033',
 	'List::MoreUtils'           => 0,
 	'LWP::UserAgent'            => '5.819',

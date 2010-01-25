@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.103';
+our $VERSION   = '0.104';
 
 ###############################################################################
 # MOOSE
@@ -59,7 +59,7 @@ occur when bad arguments are provided to a method.
 =head1 VERSION
 
 This documentation refers to L<Net::SAJAX::Exception::MethodArguments> version
-0.103
+0.104
 
 =head1 SYNOPSIS
 
