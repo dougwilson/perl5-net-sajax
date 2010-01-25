@@ -6,3 +6,4 @@
 \Apm_to_blib\z
 \ADebian_CPANTS.txt\z
 \Acover_db/ # Ignore Devel::Cover
+\.mkdn\z
