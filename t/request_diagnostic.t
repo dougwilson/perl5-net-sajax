@@ -4,7 +4,7 @@ use lib 't/lib';
 use strict;
 use warnings 'all';
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 use Test::Exception 0.03;
 use Test::Net::SAJAX::UserAgent;
 
@@ -71,4 +71,13 @@ my $sajax = new_ok('Net::SAJAX' => [
 		{ $sajax->call(function => 'Echo', arguments => ['ia@#saf sdafuwbgf']) }
 		'Net::SAJAX::Exception::JavaScriptEvaluation',
 		'Invalid JavaScript causes an exception';
+}
+
+###########################################################################
+# UNSUPPORTED JAVASCRIPT OBJECT
+{
+	throws_ok
+		{ $sajax->call(function => 'Echo', arguments => ['+:new Function();']) }
+		'Net::SAJAX::Exception::JavaScriptConversion',
+		'Unsupported JavaScript object causes an excpetion';
 }
