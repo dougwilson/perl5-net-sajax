@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.102';
+our $VERSION   = '0.103';
 
 ###############################################################################
 # MOOSE
@@ -59,7 +59,7 @@ occur when bad arguments are provided to a method.
 =head1 VERSION
 
 This documentation refers to L<Net::SAJAX::Exception::MethodArguments> version
-0.102
+0.103
 
 =head1 SYNOPSIS
 
@@ -83,10 +83,8 @@ attributes and methods in that class are also in this class.
 
 =head2 argument
 
-B<required>
-
-This is a string that contains the name of the argument that contained a bad
-value.
+B<Required>. This is a string that contains the name of the argument that
+contained a bad value.
 
 =head2 argument_value
 

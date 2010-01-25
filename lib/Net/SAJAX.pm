@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.102';
+our $VERSION   = '0.103';
 
 ###############################################################################
 # MOOSE
@@ -25,7 +25,7 @@ use English qw(-no_match_vars);
 use JE 0.033;
 use List::MoreUtils qw(any);
 use LWP::UserAgent 5.819;
-use Net::SAJAX::Exception;
+use Net::SAJAX::Exception 0.103;
 use URI 1.22;
 use URI::QueryParam;
 
@@ -317,7 +317,7 @@ Net::SAJAX - Interact with remote applications that use SAJAX.
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX> version 0.102
+This documentation refers to L<Net::SAJAX> version 0.103
 
 =head1 SYNOPSIS
 
@@ -432,9 +432,7 @@ from the object, restroing default behavour.
 
 =head2 url
 
-B<required>
-
-This is a L<URI> object of the URL of the SAJAX application.
+B<Required>. This is a L<URI> object of the URL of the SAJAX application.
 
 =head2 user_agent
 
@@ -479,9 +477,7 @@ numbers). If not specified, then no arguments are sent.
 
 =item function
 
-B<required>
-
-This is a string with the function name to call.
+B<Required>. This is a string with the function name to call.
 
 =item method
 
@@ -505,17 +501,23 @@ exception.
 
 =over
 
-=item * L<Net::SAJAX::Exception>
+=item * L<Net::SAJAX::Exception> for general exceptions not in other categories
+and the base class.
 
-=item * L<Net::SAJAX::Exception::JavaScriptConversion>
+=item * L<Net::SAJAX::Exception::JavaScriptConversion> for errors during the
+conversion of JavaScript structure to native Perl structure.
 
-=item * L<Net::SAJAX::Exception::JavaScriptEvaluation>
+=item * L<Net::SAJAX::Exception::JavaScriptEvaluation> for errors during the
+evaluation of JavaScript returned by the server.
 
-=item * L<Net::SAJAX::Exception::MethodArguments>
+=item * L<Net::SAJAX::Exception::MethodArguments> for errors related to the
+values of arguments given to methods.
 
-=item * L<Net::SAJAX::Exception::RemoteError>
+=item * L<Net::SAJAX::Exception::RemoteError> for remote errors returned by
+SAJAX itself.
 
-=item * L<Net::SAJAX::Exception::Response>
+=item * L<Net::SAJAX::Exception::Response> for errors in the HTTP response
+from the server.
 
 =back
 
