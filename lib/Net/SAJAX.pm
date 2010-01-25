@@ -217,7 +217,7 @@ sub call {
 			);
 		}
 		else {
-			corak $EVAL_ERROR;
+			croak $EVAL_ERROR;
 		}
 	}
 
@@ -506,6 +506,8 @@ exception.
 =over
 
 =item * L<Net::SAJAX::Exception>
+
+=item * L<Net::SAJAX::Exception::JavaScriptConversion>
 
 =item * L<Net::SAJAX::Exception::JavaScriptEvaluation>
 
