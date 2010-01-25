@@ -285,8 +285,11 @@ sub _unwrap_je_object {
 		'JE::Object::Array'  => sub {
 			return [ map { $self->_unwrap_je_object($_) } @{shift->value} ];
 		},
-		'JE::Object::Number' => sub { return shift->value },
-		'JE::Object::RegExp' => sub { return shift->value },
+		'JE::Object::Boolean' => sub { return shift->value },
+		'JE::Object::Date'    => sub { return "$_[0]" },
+		'JE::Object::Number'  => sub { return shift->value },
+		'JE::Object::RegExp'  => sub { return shift->value },
+		'JE::Object::String'  => sub { return shift->value },
 	);
 
 	# Get the code reference for converting the object

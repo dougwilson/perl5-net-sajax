@@ -1,6 +1,13 @@
 Revision history for Net-SAJAX
 ==============================
 
+0.104 TO BE RELEASED
+  * [Fix] Corrected typo in Makefile.PL that caused most of the dependencies
+    not to be listed.
+  * [New] Support for JavaScript Boolean object conversion
+  * [New] Support for JavaScript Date object conversion
+  * [New] Support for JavaScript String object conversion
+
 0.103 Sun, January 24, 2009 21:32:10 -0500
   * [Fix] ::Exception::JavaScriptConversion class was missing and so when
     conversion to native Perl object failed, no usefull exception was thrown.
