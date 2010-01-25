@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.102';
+our $VERSION   = '0.103';
 
 ###############################################################################
 # MOOSE
@@ -98,7 +98,7 @@ Net::SAJAX::Exception - Basic exception object for Net::SAJAX
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX::Exception> version 0.102
+This documentation refers to L<Net::SAJAX::Exception> version 0.103
 
 =head1 SYNOPSIS
 
@@ -116,9 +116,8 @@ This is a basic exception class for the L<Net::SAJAX> library.
 
 =head2 message
 
-B<required>
-
-This is a string that contains the error message for the exception.
+B<Required>. This is a string that contains the error message for the
+exception.
 
 =head1 METHODS
 

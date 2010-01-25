@@ -1,19 +1,26 @@
 Revision history for Net-SAJAX
+==============================
 
-0.102 Fri, August 21, 2009 12:52:07 -0500
+0.103 Sun, January 24, 2009 21:32:10 -0500
+  * [Fix] ::Exception::JavaScriptConversion class was missing and so when
+    conversion to native Perl object failed, no usefull exception was thrown.
+  * More tests added for better code coverage.
+  * Bundled Module::Install updated to version 0.92.
+
+0.102 Fri, August 21, 2009 12:52:07 -0400
   * [New] Net::SAJAX has a new attribute "autoclean_garbage" that when set
     will attempt to clean garbage from a SAJAX response due to bad server
     programming.
   * [API change] Exceptions are no longer strings, but objects. The objects
     will stringify to their former string representation.
 
-0.101 Sat, August 15, 2009 13:32:54 -0500
+0.101 Sat, August 15, 2009 13:32:54 -0400
   * Added forgotten dependency on Test::MockObject for the build process.
 
-0.100 Sat, August 15, 2009 01:43:02 -0500
+0.100 Sat, August 15, 2009 01:43:02 -0400
   * [API change] method call returns Perl scalar instead of JE object as
     promised, and so should not break any code.
   * Added repository and homepage links to META.
 
-0.001 Fri, August 14, 2009 14:50:12 -0500
+0.001 Fri, August 14, 2009 14:50:12 -0400
   * First release.

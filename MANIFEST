@@ -11,6 +11,7 @@ inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/Net/SAJAX.pm
 lib/Net/SAJAX/Exception.pm
+lib/Net/SAJAX/Exception/JavaScriptConversion.pm
 lib/Net/SAJAX/Exception/JavaScriptEvaluation.pm
 lib/Net/SAJAX/Exception/MethodArguments.pm
 lib/Net/SAJAX/Exception/RemoteError.pm
@@ -33,6 +34,7 @@ t/request_malformed.t
 t/request_simple.t
 t/request_url.t
 xt/clean-namespaces.t
+xt/consistent-version.t
 xt/critic.t
 xt/kwalitee.t
 xt/manifest.t

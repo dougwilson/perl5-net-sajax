@@ -1,4 +1,4 @@
-package Net::SAJAX::Exception::Response;
+package Net::SAJAX::Exception::JavaScriptConversion;
 
 use 5.008003;
 use strict;
@@ -24,10 +24,9 @@ use namespace::clean 0.04 -except => [qw(meta)];
 
 ###############################################################################
 # ATTRIBUTES
-has response => (
+has javascript_object => (
 	is            => 'ro',
-	isa           => 'HTTP::Response',
-	documentation => q{The HTTP response that causes the error},
+	documentation => q{The JavaScript object that could not be converted},
 	required      => 1,
 );
 
@@ -41,26 +40,27 @@ __END__
 
 =head1 NAME
 
-Net::SAJAX::Exception::Response - Exception object for exceptions that occur
-during reading of the response
+Net::SAJAX::Exception::JavaScriptConversion - Exception object for exceptions
+that occur when converting JavaScript objects.
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX::Exception::Response> version 0.103
+This documentation refers to L<Net::SAJAX::Exception::JavaScriptConversion>
+version 0.103
 
 =head1 SYNOPSIS
 
-  use Net::SAJAX::Exception::Response;
+  use Net::SAJAX::Exception::JavaScriptConversion;
 
-  Net::SAJAX::Exception::Response->throw(
-    message  => 'This is some error message',
-    response => $http_response_object,
+  Net::SAJAX::Exception::JavaScriptEvaluation->throw(
+    message           => 'This is some error message',
+    javascript_object => $native_js_object,
   );
 
 =head1 DESCRIPTION
 
-This is an exception class for exceptions that occur during reading of the
-server response in the L<Net::SAJAX> library.
+This is an exception class for exceptions that occur during coversion of
+JavaScript objects in the L<Net::SAJAX> library.
 
 =head1 INHERITANCE
 
@@ -69,10 +69,10 @@ attributes and methods in that class are also in this class.
 
 =head1 ATTRIBUTES
 
-=head2 response
+=head2 javascript_object
 
-B<Required>. This is a L<HTTP::Response> object that contains the response that
-generated the exception.
+B<Required>. This is a native JavaScript object from L<JE> that was unable to
+be converted to a native Perl object.
 
 =head1 METHODS
 

@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.102';
+our $VERSION   = '0.103';
 
 ###############################################################################
 # MOOSE
@@ -25,7 +25,7 @@ use English qw(-no_match_vars);
 use JE 0.033;
 use List::MoreUtils qw(any);
 use LWP::UserAgent 5.819;
-use Net::SAJAX::Exception;
+use Net::SAJAX::Exception 0.103;
 use URI 1.22;
 use URI::QueryParam;
 
@@ -217,7 +217,7 @@ sub call {
 			);
 		}
 		else {
-			corak $EVAL_ERROR;
+			croak $EVAL_ERROR;
 		}
 	}
 
@@ -317,7 +317,7 @@ Net::SAJAX - Interact with remote applications that use SAJAX.
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX> version 0.102
+This documentation refers to L<Net::SAJAX> version 0.103
 
 =head1 SYNOPSIS
 
@@ -389,6 +389,10 @@ and there may be HTML or other data above the SAJAX response (most common in
 PHP applications). If the stripping fails, then it will work just like normal.
 The default value is 0, which will mimic the expected SAJAX behavior.
 
+=head2 has_target_id
+
+This is a Boolean of whether or not the object has a L</target_id> set.
+
 =head2 javascript_engine
 
 This is a L<JE> object that is used to evaluate the JavaScript data recieved.
@@ -428,9 +432,7 @@ from the object, restroing default behavour.
 
 =head2 url
 
-B<required>
-
-This is a L<URI> object of the URL of the SAJAX application.
+B<Required>. This is a L<URI> object of the URL of the SAJAX application.
 
 =head2 user_agent
 
@@ -475,9 +477,7 @@ numbers). If not specified, then no arguments are sent.
 
 =item function
 
-B<required>
-
-This is a string with the function name to call.
+B<Required>. This is a string with the function name to call.
 
 =item method
 
@@ -485,6 +485,11 @@ This is a string that is either C<"GET"> or C<"POST">. If not supplied, then
 the method is assumed to be C<"GET">, as this is the most common SAJAX method.
 
 =back
+
+=head2 clear_target_id
+
+This will clear out the L</target_id> set for this object which will cause the
+object to no longer send a L</target_id> with the request.
 
 =head1 DIAGNOSTICS
 
@@ -496,15 +501,23 @@ exception.
 
 =over
 
-=item * L<Net::SAJAX::Exception>
+=item * L<Net::SAJAX::Exception> for general exceptions not in other categories
+and the base class.
 
-=item * L<Net::SAJAX::Exception::JavaScriptEvaluation>
+=item * L<Net::SAJAX::Exception::JavaScriptConversion> for errors during the
+conversion of JavaScript structure to native Perl structure.
 
-=item * L<Net::SAJAX::Exception::MethodArguments>
+=item * L<Net::SAJAX::Exception::JavaScriptEvaluation> for errors during the
+evaluation of JavaScript returned by the server.
 
-=item * L<Net::SAJAX::Exception::RemoteError>
+=item * L<Net::SAJAX::Exception::MethodArguments> for errors related to the
+values of arguments given to methods.
 
-=item * L<Net::SAJAX::Exception::Response>
+=item * L<Net::SAJAX::Exception::RemoteError> for remote errors returned by
+SAJAX itself.
+
+=item * L<Net::SAJAX::Exception::Response> for errors in the HTTP response
+from the server.
 
 =back
 
