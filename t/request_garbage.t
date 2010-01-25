@@ -33,7 +33,7 @@ my $sajax = new_ok('Net::SAJAX' => [
 
 	lives_and(sub {is($sajax->call(
 		function  => 'Echo',
-		arguments => ["<html><head>\n\n+:var res='test'; res;"],
+		arguments => ["<html><head>\n\n+:'test';"],
 	), 'test')}, 'Cleaned HTML at beginning');
 }
 
