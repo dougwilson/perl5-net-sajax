@@ -31,6 +31,8 @@ sub get {
 	# Get the called function name
 	my $function  = $url->query_param('rs');
 	my @arguments = $url->query_param('rsargs[]');
+	my $target_id = $url->query_param('rst');
+	my $rand_key  = $url->query_param('rsrnd');
 
 	# Change URL into a URI object
 	$url = URI->new($url);
@@ -38,6 +40,8 @@ sub get {
 	return _process_request(
 		function  => $function,
 		arguments => \@arguments,
+		target_id => $target_id,
+		rand_key  => $rand_key,
 		url       => $url,
 		method    => 'GET',
 	);
@@ -108,6 +112,16 @@ sub _any_Echo {
 		response => HTTP::Response->new(200, 'OK', undef, $arguments[0]),
 	};
 }
+sub _any_EchoRandKey {
+	my %args = @_;
+
+	# Get the target id of the request
+	my $rand_key = $args{rand_key};
+
+	return {
+		response => HTTP::Response->new(200, 'OK', undef, "+:var res = '$rand_key'; res;"),
+	};
+}
 sub _any_EchoStatus {
 	my %args = @_;
 
@@ -121,6 +135,16 @@ sub _any_EchoStatus {
 
 	return {
 		response => HTTP::Response->new($status, '?????', undef, "+:var res = $status; res;"),
+	};
+}
+sub _any_EchoTargetId {
+	my %args = @_;
+
+	# Get the target id of the request
+	my $target_id = $args{target_id};
+
+	return {
+		response => HTTP::Response->new(200, 'OK', undef, "+:var res = '$target_id'; res;"),
 	};
 }
 sub _any_EchoUrl {
