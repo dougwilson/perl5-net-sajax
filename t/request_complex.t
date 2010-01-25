@@ -4,7 +4,7 @@ use lib 't/lib';
 use strict;
 use warnings 'all';
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 use Test::Exception 0.03;
 use Test::Net::SAJAX::UserAgent;
 
@@ -56,4 +56,24 @@ my $sajax = new_ok('Net::SAJAX' => [
 		arguments => ['+:var arr = [{"a": 2, "b": "c"},{"d": 7, 40: "e"}]; arr;'],
 	)}, 'Function returns array of objects');
 	is_deeply($data, [{a => 2, b => 'c'},{d => 7, 40 => 'e'}], 'Simple array of objects');
+
+	# Function returning all supported types at once
+	lives_and {
+		is_deeply $sajax->call(
+			function  => 'Echo',
+			arguments => ['+:var res = {"object":{},"array":[],"boolean":true,'
+				. '"null":null,"number":1,"string":"test","undefined":undefined,'
+				. '"number_object":new Object(5),"regexp":new RegExp("test.+")}; res;'],
+		), {
+			object        => {},
+			array         => [],
+			boolean       => 1,
+			null          => undef,
+			number        => 1,
+			string        => 'test',
+			undefined     => undef,
+			number_object => 5,
+			regexp        => qr/test.+/,
+		};
+	} 'All types unwrapped';
 }
