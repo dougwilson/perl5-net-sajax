@@ -248,7 +248,7 @@ sub _parse_data_from_response {
 	my ($status, $data) = $content
 		=~ m{\A \s* (.) . (.*?) \s* \z}msx;
 
-	if (!defined $status || !defined $data) {
+	if (!defined $status) {
 		# The response was bad
 		Net::SAJAX::Exception->throw(
 			class    => 'Response',
