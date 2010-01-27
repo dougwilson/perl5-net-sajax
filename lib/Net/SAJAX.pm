@@ -22,6 +22,7 @@ use MooseX::Types::URI 0.02 qw(Uri);
 # MODULE IMPORTS
 use Carp qw(croak);
 use English qw(-no_match_vars);
+use HTTP::Request::Common 5.814 (); # No imports
 use JE 0.033;
 use List::MoreUtils qw(any);
 use LWP::UserAgent 5.819;
@@ -79,96 +80,11 @@ has user_agent => (
 sub call {
 	my ($self, %args) = @_;
 
-	# Splice out the variables
-	my ($function, $arguments, $method)
-		= @args{qw(function arguments method)};
+	# Build a request object
+	my $request = $self->_build_request_for_call(%args);
 
-	# Set the default value for method. Perl 5.8 doesn't know //=
-	$method ||= 'GET';
-
-	if (!defined $function) {
-		# No function was specified
-		Net::SAJAX::Exception->throw(
-			class          => 'MethodArguments',
-			argument       => 'function',
-			argument_value => $function,
-			message        => 'No function was specified to call',
-			method         => 'call',
-		);
-	}
-
-	# Change the method to uppercase
-	$method = uc $method;
-
-	if ($method ne 'GET' && $method ne 'POST') {
-		# SAJAX only supports GET and POST
-		Net::SAJAX::Exception->throw(
-			class          => 'MethodArguments',
-			argument       => 'method',
-			argument_value => $method,
-			message        => 'SAJAX only supports the GET and POST methods',
-			method         => 'call',
-		);
-	}
-
-	if (defined $arguments) {
-		if (ref $arguments ne 'ARRAY') {
-			# Arguments must refer to an ARRAYREF
-			Net::SAJAX::Exception->throw(
-				class          => 'MethodArguments',
-				argument       => 'arguments',
-				argument_value => $arguments,
-				message        => 'Must pass arguments as an ARRAYREF',
-				method         => 'call',
-			);
-		}
-
-		if(any {ref $_ ne q{}} @{$arguments}) {
-			# No argument can be a reference
-			Net::SAJAX::Exception->throw(
-				class          => 'MethodArguments',
-				argument       => 'arguments',
-				argument_value => $arguments,
-				message        => 'No arguments can be a reference',
-				method         => 'call',
-			);
-		}
-	}
-
-	# Clone the URL
-	my $call_url = $self->url->clone;
-
-	# Build the SAJAX arguments
-	my %sajax_arguments = (rs => $function);
-
-	if ($self->has_target_id) {
-		# Add the target ID
-		$sajax_arguments{rst} = $self->target_id;
-	}
-
-	if ($self->send_rand_key) {
-		# Add in a random key to the request
-		$sajax_arguments{rsrnd} = scalar time;
-	}
-
-	if (defined $arguments) {
-		# Add the arguments to the request
-		$sajax_arguments{'rsargs[]'} = $arguments;
-	}
-
-	my $response;
-
-	if ($method eq 'GET') {
-		# Add the SAJAX arguments to the URL for a GET request
-		$call_url->query_form_hash(%{$call_url->query_form_hash}, %sajax_arguments, );
-
-		# Make the request
-		$response = $self->user_agent->get($call_url);
-	}
-	else {
-		# Make the POST request
-		$response = $self->user_agent->post($call_url, \%sajax_arguments);
-	}
+	# Get a response
+	my $response = $self->user_agent->request($request);
 
 	if (!$response->is_success) {
 		# The response was not successful
@@ -226,6 +142,104 @@ sub call {
 
 ###############################################################################
 # PRIVATE METHODS
+sub _build_request_for_call {
+	my ($self, %args) = @_;
+
+	# Splice out the variables
+	my ($function, $arguments, $method)
+		= @args{qw(function arguments method)};
+
+	# Set the default value for method. Perl 5.8 doesn't know //=
+	$method ||= 'GET';
+
+	if (!defined $function) {
+		# No function was specified
+		Net::SAJAX::Exception->throw(
+			class          => 'MethodArguments',
+			argument       => 'function',
+			argument_value => $function,
+			message        => 'No function was specified to call',
+			method         => 'build_request_for_call',
+		);
+	}
+
+	# Change the method to uppercase
+	$method = uc $method;
+
+	if ($method ne 'GET' && $method ne 'POST') {
+		# SAJAX only supports GET and POST
+		Net::SAJAX::Exception->throw(
+			class          => 'MethodArguments',
+			argument       => 'method',
+			argument_value => $method,
+			message        => 'SAJAX only supports the GET and POST methods',
+			method         => 'build_request_for_call',
+		);
+	}
+
+	if (defined $arguments) {
+		if (ref $arguments ne 'ARRAY') {
+			# Arguments must refer to an ARRAYREF
+			Net::SAJAX::Exception->throw(
+				class          => 'MethodArguments',
+				argument       => 'arguments',
+				argument_value => $arguments,
+				message        => 'Must pass arguments as an ARRAYREF',
+				method         => 'build_request_for_call',
+			);
+		}
+
+		if(any {ref $_ ne q{}} @{$arguments}) {
+			# No argument can be a reference
+			Net::SAJAX::Exception->throw(
+				class          => 'MethodArguments',
+				argument       => 'arguments',
+				argument_value => $arguments,
+				message        => 'No arguments can be a reference',
+				method         => 'build_request_for_call',
+			);
+		}
+	}
+
+	# Clone the URL
+	my $call_url = $self->url->clone;
+
+	# Build the SAJAX arguments
+	my %sajax_arguments = (rs => $function);
+
+	if ($self->has_target_id) {
+		# Add the target ID
+		$sajax_arguments{rst} = $self->target_id;
+	}
+
+	if ($self->send_rand_key) {
+		# Add in a random key to the request
+		$sajax_arguments{rsrnd} = scalar time;
+	}
+
+	if (defined $arguments) {
+		# Add the arguments to the request
+		$sajax_arguments{'rsargs[]'} = $arguments;
+	}
+
+	# Hold the request
+	my $request;
+
+	if ($method eq 'GET') {
+		# Add the SAJAX arguments to the URL for a GET request
+		$call_url->query_form_hash(%{$call_url->query_form_hash}, %sajax_arguments, );
+
+		# Make the GET request
+		$request = HTTP::Request::Common::GET($call_url);
+	}
+	else {
+		# Make the POST request
+		$request = HTTP::Request::Common::POST($call_url, \%sajax_arguments);
+	}
+
+	# Return the request
+	return $request;
+}
 sub _parse_data_from_response {
 	my ($self, $response) = @_;
 
@@ -536,6 +550,8 @@ it. Please see L<Net::SAJAX::VersionGuarantee>.
 =over 4
 
 =item * L<English>
+
+=item * L<HTTP::Request::Common> 5.814
 
 =item * L<JE> 0.033
 

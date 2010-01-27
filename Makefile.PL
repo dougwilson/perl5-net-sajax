@@ -13,6 +13,7 @@ resources repository => 'git://github.com/dougwilson/perl5-net-sajax.git';
 requires
 	'Carp'                      => 0,
 	'English'                   => 0,
+	'HTTP::Request::Common'     => '5.814',
 	'JE'                        => '0.033',
 	'List::MoreUtils'           => 0,
 	'LWP::UserAgent'            => '5.819',
@@ -27,7 +28,8 @@ requires
 test_requires
 	'Test::Exception'  => '0.03',
 	'Test::MockObject' => 0,
-	'Test::More'       => '0.41';
+	'Test::More'       => '0.41',
+	'URI::Escape'      => 0;
 
 # Modules that are required for author tests
 author_requires
