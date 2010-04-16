@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.104';
+our $VERSION   = '0.105';
 
 ###############################################################################
 # MOOSE
@@ -46,7 +46,7 @@ that occur when converting JavaScript objects.
 =head1 VERSION
 
 This documentation refers to L<Net::SAJAX::Exception::JavaScriptConversion>
-version 0.104
+version 0.105
 
 =head1 SYNOPSIS
 
@@ -59,7 +59,7 @@ version 0.104
 
 =head1 DESCRIPTION
 
-This is an exception class for exceptions that occur during coversion of
+This is an exception class for exceptions that occur during conversion of
 JavaScript objects in the L<Net::SAJAX> library.
 
 =head1 INHERITANCE

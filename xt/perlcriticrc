@@ -12,3 +12,6 @@ severity = 5
 
 [TestingAndDebugging::RequireUseWarnings]
 severity = 5
+
+[Documentation::PodSpelling]
+stop_words = SAJAX HASHREF PHP JavaScript ARRAYREF perldoc CPAN's AnnoCPAN CPAN url stringify

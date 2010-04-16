@@ -7,6 +7,7 @@ use warnings 'all';
 use HTTP::Response;
 use Test::MockObject;
 use URI;
+use URI::Escape (); # No imports
 use URI::QueryParam;
 
 sub new {
@@ -16,8 +17,9 @@ sub new {
 	my $fake_ua = Test::MockObject->new;
 
 	# Set the fake methods
-	$fake_ua->mock(get  => \&get);
-	$fake_ua->mock(post => \&post);
+	$fake_ua->mock(get     => \&get);
+	$fake_ua->mock(post    => \&post);
+	$fake_ua->mock(request => \&request);
 
 	# Set the fake inheritance for the UA
 	$fake_ua->set_isa('LWP::UserAgent');
@@ -60,6 +62,36 @@ sub post {
 		url       => $url,
 		method    => 'POST',
 	);
+}
+
+sub request {
+	my ($self, $request) = @_;
+
+	# The function to redirect to
+	my $handle_request = sub {
+		die sprintf 'Cannot handle %s request', $request->method;
+	};
+
+	if ($request->method eq 'GET') {
+		# Forward to GET mocker
+		$handle_request = sub { return $self->get($request->uri); };
+	}
+	elsif ($request->method eq 'POST') {
+		# Forward to POST mocket
+		$handle_request = sub {
+			# Get the key pairs from the content
+			my %content = map {
+				URI::Escape::uri_unescape($_)
+			} map {
+				split m{=}msx
+			} split m{&}msx, $request->decoded_content;
+
+			return $self->post($request->uri, \%content);
+		};
+	}
+
+	# Forward the request
+	return $handle_request->();
 }
 
 sub _process_request {
