@@ -266,7 +266,7 @@ sub _parse_data_from_response {
 		# The response was bad
 		Net::SAJAX::Exception->throw(
 			class    => 'Response',
-			message  => 'Recieved a bad response',
+			message  => 'Received a bad response',
 			response => $response,
 		);
 	}
@@ -412,7 +412,7 @@ This is a Boolean of whether or not the object has a L</target_id> set.
 
 =head2 javascript_engine
 
-This is a L<JE> object that is used to evaluate the JavaScript data recieved.
+This is a L<JE> object that is used to evaluate the JavaScript data received.
 Since this is a custom engine in Perl, the JavaScript executed should not have
 any security affects. This defaults to C<< JE->new(max_ops => 1000) >>.
 
@@ -440,12 +440,12 @@ request.
   # Change the target ID
   $sajax->target_id('content');
 
-  # Clear the target ID (restroing default behavour)
+  # Clear the target ID (restoring default behavior)
   $sajax->clear_target_id();
 
 Using L</has_target_id>, it can be determined if a target ID is currently
 set on the object. Using L</clear_target_id> the target ID will be cleared
-from the object, restroing default behavour.
+from the object, restoring default behavior.
 
 =head2 url
 
@@ -614,10 +614,6 @@ L<http://cpanratings.perl.org/d/Net-SAJAX>
 L<http://search.cpan.org/dist/Net-SAJAX/>
 
 =back
-
-
-=head1 ACKNOWLEDGEMENTS
-
 
 =head1 LICENSE AND COPYRIGHT
 

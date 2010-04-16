@@ -59,7 +59,7 @@ version 0.104
 
 =head1 DESCRIPTION
 
-This is an exception class for exceptions that occur during coversion of
+This is an exception class for exceptions that occur during conversion of
 JavaScript objects in the L<Net::SAJAX> library.
 
 =head1 INHERITANCE
