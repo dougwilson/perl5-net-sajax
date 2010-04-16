@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.104';
+our $VERSION   = '0.105';
 
 ###############################################################################
 # MOOSE
@@ -46,7 +46,7 @@ that occur when converting JavaScript objects.
 =head1 VERSION
 
 This documentation refers to L<Net::SAJAX::Exception::JavaScriptConversion>
-version 0.104
+version 0.105
 
 =head1 SYNOPSIS
 
