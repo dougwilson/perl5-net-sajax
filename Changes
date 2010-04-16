@@ -1,6 +1,9 @@
 Revision history for Net-SAJAX
 ==============================
 
+0.105 Fri, April 16, 2010 10:43:41 -0500
+  * [Fix] The regular expression test no longer fails on Perl 5.11.0+
+
 0.104 Mon, January 25, 2010 13:16:12 -0500
   * [Fix] Corrected typo in Makefile.PL that caused most of the dependencies
     not to be listed.

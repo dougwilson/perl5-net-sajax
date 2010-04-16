@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.104';
+our $VERSION   = '0.105';
 
 ###############################################################################
 # MOOSE
@@ -334,7 +334,7 @@ Net::SAJAX - Interact with remote applications that use SAJAX.
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX> version 0.104
+This documentation refers to L<Net::SAJAX> version 0.105
 
 =head1 SYNOPSIS
 
