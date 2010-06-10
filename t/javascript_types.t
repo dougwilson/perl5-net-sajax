@@ -104,10 +104,10 @@ my $sajax = new_ok('Net::SAJAX' => [
 
 	# Regular expression
 	lives_and {
-		is_deeply $sajax->call(
+		like $sajax->call(
 			function  => 'Echo',
 			arguments => ['+:r = new RegExp("test1*")'],
-		), qr/test1*/;
+		), qr/test1\*/;
 	} 'Regular expression (object)';
 
 	# Date

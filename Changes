@@ -1,6 +1,10 @@
 Revision history for Net-SAJAX
 ==============================
 
+0.106 Thu, June 6, 2010 15:02:15 -0400
+  * [Fix] The regular expression test no longer fails on Perl 5.11.0+
+    (hopefully it will work this time).
+
 0.105 Fri, April 16, 2010 10:43:41 -0500
   * [Fix] The regular expression test no longer fails on Perl 5.11.0+
 
