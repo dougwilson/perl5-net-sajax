@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.105';
+our $VERSION   = '0.106';
 
 ###############################################################################
 # MOOSE
@@ -47,7 +47,7 @@ when an error is given by the remote server.
 =head1 VERSION
 
 This documentation refers to L<Net::SAJAX::Exception::RemoteError> version
-0.105
+0.106
 
 =head1 SYNOPSIS
 
