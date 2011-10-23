@@ -1,5 +1,9 @@
 Revision history for perl distribution Net-SAJAX
 
+TO BE RELEASED
+ [OTHER]
+ - Use Class::Load for loading exception classes dynamically.
+
 0.106 2010-06-06
  [BUG FIXES]
  - The regular expression test no longer fails on Perl 5.11.0+

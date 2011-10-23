@@ -46,6 +46,7 @@ provides:
     version: 0.106
 requires:
   Carp: 0
+  Class::Load: 0
   English: 0
   HTTP::Request::Common: 5.814
   JE: 0.033

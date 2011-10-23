@@ -17,7 +17,7 @@ use MooseX::StrictConstructor 0.08;
 ###############################################################################
 # MODULE IMPORTS
 use Carp qw(croak);
-use English qw(-no_match_vars);
+use Class::Load qw(load_class);
 
 ###############################################################################
 # ALL IMPORTS BEFORE THIS WILL BE ERASED
@@ -64,22 +64,8 @@ sub throw {
 	# Prefix this class to the beginning of the exception class
 	$exception_class = sprintf '%s::%s', $class, $exception_class;
 
-	if ($exception_class !~ m{\A \w+ (?: :: \w+)* \z}imsx) {
-		# The class name doesn't seem good, so toss it because we don't want
-		# to be evaulating bad code.
-		croak $class->new(
-			message => 'The provided class name seemed like a bad name',
-		);
-	}
-
-	# Attempt to load the exception class
-	## no critic qw(BuiltinFunctions::ProhibitStringyEval)
-	if (!eval "use $exception_class; 1") {
-		croak $class->new(
-			message => sprintf 'Unable to initiate the %s error class: %s',
-				$exception_class, $EVAL_ERROR
-		);
-	}
+	# Load the exception class
+	load_class($exception_class);
 
 	croak $exception_class->new(%args);
 }
@@ -155,7 +141,7 @@ class.
 
 =item * L<Carp|Carp>
 
-=item * L<English|English>
+=item * L<Class::Load|Class::Load>
 
 =item * L<Moose|Moose> 0.77
 

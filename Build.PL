@@ -37,6 +37,7 @@ my $build = Module::Build->new(
 	requires => {
 		'perl'                      => '5.008003',
 		'Carp'                      => 0,
+		'Class::Load'               => 0,
 		'English'                   => 0,
 		'HTTP::Request::Common'     => '5.814',
 		'JE'                        => '0.033',
