@@ -98,7 +98,7 @@ Net::SAJAX::Exception - Basic exception object for Net::SAJAX
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX::Exception> version 0.106
+This documentation refers to version 0.106
 
 =head1 SYNOPSIS
 
@@ -110,7 +110,7 @@ This documentation refers to L<Net::SAJAX::Exception> version 0.106
 
 =head1 DESCRIPTION
 
-This is a basic exception class for the L<Net::SAJAX> library.
+This is a basic exception class for the L<Net::SAJAX library|Net::SAJAX>.
 
 =head1 ATTRIBUTES
 
@@ -153,15 +153,15 @@ class.
 
 =over
 
-=item * L<Carp>
+=item * L<Carp|Carp>
 
-=item * L<English>
+=item * L<English|English>
 
-=item * L<Moose> 0.77
+=item * L<Moose|Moose> 0.77
 
-=item * L<MooseX::StrictConstructor> 0.08
+=item * L<MooseX::StrictConstructor|MooseX::StrictConstructor> 0.08
 
-=item * L<namespace::clean> 0.04
+=item * L<namespace::clean|namespace::clean> 0.04
 
 =back
 
