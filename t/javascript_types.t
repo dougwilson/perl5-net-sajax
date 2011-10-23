@@ -1,11 +1,11 @@
-#!perl -T
+#!/usr/bin/perl -T
 
 use lib 't/lib';
 use strict;
 use warnings 'all';
 
-use Test::More tests => 14;
-use Test::Exception 0.03;
+use Test::More tests => 27;
+use Test::Fatal;
 use Test::Net::SAJAX::UserAgent;
 
 use Net::SAJAX;
@@ -20,101 +20,50 @@ my $sajax = new_ok('Net::SAJAX' => [
 ###########################################################################
 # VERFIY TYPES ARE UNWRAPPED FINE
 {
-	# Object
-	lives_and {
-		is_deeply $sajax->call(
-			function  => 'Echo',
-			arguments => ['+:o = {"key":"value"}'],
-		), {
-			key => 'value',
-		};
-	} 'Object';
+	# List of strings to unwrap
+	my @tests = (
+		['Object' => '+:o = {"key":"value"}', {key => 'value'}],
+		['Array' => '+:a = ["a","b"]', [qw(a b)]],
+		['Boolean (true)' => '+:b = true', !!1],
+		['Boolean (false)' => '+:b = false', !!0],
+		['Boolean (object)' => '+:b = new Boolean(1)', !!1],
+		['Null' => '+:n = null', undef],
+		['Number' => '+:n = 55', 55],
+		['Number (object)' => '+:n = new Number(33)', 33],
+		['String' => '+:s = "test string"', 'test string'],
+		['String (object)' => '+:s = new String("string thing")', 'string thing'],
+		['Undefined' => '+:u = undefined', undef],
+	);
 
-	# Array
-	lives_and {
-		is_deeply $sajax->call(
-			function  => 'Echo',
-			arguments => ['+:a = ["a","b"]'],
-		), [qw(a b)];
-	} 'Array';
+	for my $test (@tests) {
+		my $data;
 
-	# Boolean
-	lives_and {
-		ok $sajax->call(
+		is(exception {$data = $sajax->call(
 			function  => 'Echo',
-			arguments => ['+:b = true'],
-		);
-	} 'Boolean (true)';
-	lives_and {
-		ok !$sajax->call(
-			function  => 'Echo',
-			arguments => ['+:b = false'],
-		);
-	} 'Boolean (false)';
-	lives_and {
-		ok $sajax->call(
-			function  => 'Echo',
-			arguments => ['+:b = new Boolean(1)'],
-		);
-	} 'Boolean (object)';
-
-	# Null
-	lives_and {
-		ok !defined $sajax->call(
-			function  => 'Echo',
-			arguments => ['+:n = null'],
-		);
-	} 'Null';
-
-	# Number
-	lives_and {
-		is $sajax->call(
-			function  => 'Echo',
-			arguments => ['+:n = 55'],
-		), 55;
-	} 'Number';
-	lives_and {
-		is $sajax->call(
-			function  => 'Echo',
-			arguments => ['+:n = new Number(33)'],
-		), 33;
-	} 'Number (object)';
-
-	# String
-	lives_and {
-		is $sajax->call(
-			function  => 'Echo',
-			arguments => ['+:s = "test string"'],
-		), 'test string';
-	} 'String';
-	lives_and {
-		is $sajax->call(
-			function  => 'Echo',
-			arguments => ['+:s = new String("string thing")'],
-		), 'string thing';
-	} 'String (object)';
-
-	# Undefined
-	lives_and {
-		ok !defined $sajax->call(
-			function  => 'Echo',
-			arguments => ['+:u = undefined'],
-		);
-	} 'Undefined';
+			arguments => [$test->[1]],
+		)}, undef, $test->[0] . ' request succeeded');
+		is_deeply($data, $test->[2], $test->[0] . ' unwrapped');
+	}
 
 	# Regular expression
-	lives_and {
-		like $sajax->call(
+	{
+		my $data;
+
+		is(exception {$data = $sajax->call(
 			function  => 'Echo',
 			arguments => ['+:r = new RegExp("test1*")'],
-		), qr/test1\*/;
-	} 'Regular expression (object)';
+		)}, undef, 'Regular expression (object) request succeeded');
+		like($data, qr/test1\*/, 'Regular expression (object) unwrapped');
+	}
 
 	# Date
-	lives_and {
-		like $sajax->call(
+	{
+		my $data;
+
+		is(exception {$data = $sajax->call(
 			function  => 'Echo',
 			arguments => ['+:r = new Date(2010, 10, 12, 3, 30, 14)'],
-		), qr/\AFri Nov 12 03:30:14 2010/;
-	} 'Date (object)';
+		)}, undef, 'Date (object) request succeeded');
+		like($data, qr/\AFri Nov 12 03:30:14 2010/, 'Date (object) unwrapped');
+	}
 }

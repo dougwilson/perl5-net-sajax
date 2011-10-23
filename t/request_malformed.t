@@ -1,11 +1,11 @@
-#!perl -T
+#!/usr/bin/perl -T
 
 use lib 't/lib';
 use strict;
 use warnings 'all';
 
 use Test::More tests => 6;
-use Test::Exception 0.03;
+use Test::Fatal;
 use Test::Net::SAJAX::UserAgent;
 
 use Net::SAJAX;
@@ -20,28 +20,28 @@ my $sajax = new_ok('Net::SAJAX' => [
 ###########################################################################
 # REQUEST RETURNING HTML
 {
-	dies_ok(sub {$sajax->call(
+	isnt(exception {$sajax->call(
 		function  => 'Echo',
 		arguments => ['I am some text!'],
-	)}, 'Returned plain text');
+	)}, undef, 'Returned plain text');
 
-	dies_ok(sub {$sajax->call(
+	isnt(exception {$sajax->call(
 		function  => 'Echo',
 		arguments => ['<html><body>HTML Body</body></html>'],
-	)}, 'Return HTML');
+	)}, undef, 'Return HTML');
 
-	dies_ok(sub {$sajax->call(
+	isnt(exception {$sajax->call(
 		function  => 'Echo',
 		arguments => ['<script>var res="test";</script>res;'],
-	)}, 'Return HTML');
+	)}, undef, 'Return HTML');
 
-	dies_ok(sub {$sajax->call(
+	isnt(exception {$sajax->call(
 		function  => 'Echo',
 		arguments => ['+:<script>var res="test";</script>res;'],
-	)}, 'Return HTML');
+	)}, undef, 'Return HTML');
 
-	dies_ok(sub {$sajax->call(
+	isnt(exception {$sajax->call(
 		function  => 'Echo',
 		arguments => ["<html><head>\n\n+:var res='test'; res;"],
-	)}, 'HTML returned before SAJAX');
+	)}, undef, 'HTML returned before SAJAX');
 }

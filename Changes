@@ -2,6 +2,7 @@ Revision history for perl distribution Net-SAJAX
 
 TO BE RELEASED
  [OTHER]
+ - Change from Test::Exception to Test::Fatal.
  - Use Class::Load for loading exception classes dynamically.
 
 0.106 2010-06-06

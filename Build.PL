@@ -26,7 +26,7 @@ my $build = Module::Build->new(
 
 	# Module that are required for tests in t/
 	build_requires => {
-		'Test::Exception'  => '0.03',
+		'Test::Fatal'      => 0,
 		'Test::MockObject' => 0,
 		'Test::More'       => '0.41',
 		'Test::Requires'   => '0.02',

@@ -1,10 +1,10 @@
-#!perl -T
+#!/usr/bin/perl -T
 
 use strict;
 use warnings 'all';
 
 use Test::More tests => 14;
-use Test::Exception 0.03;
+use Test::Fatal;
 
 use Net::SAJAX;
 use URI;
@@ -13,14 +13,14 @@ use URI;
 # EMPTY CONSTRUCTOR
 # Expect: Failure
 {
-	dies_ok(sub { Net::SAJAX->new }, 'Empty constructor does not succeed');
+	isnt(exception { Net::SAJAX->new }, undef, 'Empty constructor does not succeed');
 }
 
 ###########################################################################
 # CONSTRUCTOR WITH BAD ARGUMENTS
 # Expect: Failure
 {
-	dies_ok(sub { Net::SAJAX->new(i_am_a_bad_argument => 1) },
+	isnt(exception { Net::SAJAX->new(i_am_a_bad_argument => 1) }, undef,
 		'Constructor with unknown argument failes');
 }
 
