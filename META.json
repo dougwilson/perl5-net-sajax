@@ -57,31 +57,31 @@
    "provides" : {
       "Net::SAJAX" : {
          "file" : "lib/Net/SAJAX.pm",
-         "version" : "0.106"
+         "version" : "0.107"
       },
       "Net::SAJAX::Exception" : {
          "file" : "lib/Net/SAJAX/Exception.pm",
-         "version" : "0.106"
+         "version" : "0.107"
       },
       "Net::SAJAX::Exception::JavaScriptConversion" : {
          "file" : "lib/Net/SAJAX/Exception/JavaScriptConversion.pm",
-         "version" : "0.106"
+         "version" : "0.107"
       },
       "Net::SAJAX::Exception::JavaScriptEvaluation" : {
          "file" : "lib/Net/SAJAX/Exception/JavaScriptEvaluation.pm",
-         "version" : "0.106"
+         "version" : "0.107"
       },
       "Net::SAJAX::Exception::MethodArguments" : {
          "file" : "lib/Net/SAJAX/Exception/MethodArguments.pm",
-         "version" : "0.106"
+         "version" : "0.107"
       },
       "Net::SAJAX::Exception::RemoteError" : {
          "file" : "lib/Net/SAJAX/Exception/RemoteError.pm",
-         "version" : "0.106"
+         "version" : "0.107"
       },
       "Net::SAJAX::Exception::Response" : {
          "file" : "lib/Net/SAJAX/Exception/Response.pm",
-         "version" : "0.106"
+         "version" : "0.107"
       }
    },
    "release_status" : "stable",
@@ -94,5 +94,5 @@
          "url" : "git://github.com/dougwilson/perl5-net-sajax.git"
       }
    },
-   "version" : "0.106"
+   "version" : "0.107"
 }

@@ -1,4 +1,4 @@
-Net-SAJAX version 0.106
+Net-SAJAX version 0.107
 =======================
 
 See the individual module documentation for more information
