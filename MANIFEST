@@ -1,13 +1,5 @@
+Build.PL
 Changes
-inc/Module/Install.pm
-inc/Module/Install/AuthorRequires.pm
-inc/Module/Install/Base.pm
-inc/Module/Install/Can.pm
-inc/Module/Install/Fetch.pm
-inc/Module/Install/Makefile.pm
-inc/Module/Install/Metadata.pm
-inc/Module/Install/Win32.pm
-inc/Module/Install/WriteAll.pm
 lib/Net/SAJAX.pm
 lib/Net/SAJAX/Exception.pm
 lib/Net/SAJAX/Exception/JavaScriptConversion.pm
@@ -17,9 +9,10 @@ lib/Net/SAJAX/Exception/RemoteError.pm
 lib/Net/SAJAX/Exception/Response.pm
 lib/Net/SAJAX/UpdatingCode.pod
 lib/Net/SAJAX/VersionGuarantee.pod
-Makefile.PL
+LICENSE
 MANIFEST			This list of files
 MANIFEST.SKIP
+META.json
 META.yml
 README
 t/00-load.t

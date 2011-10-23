@@ -1,11 +1,11 @@
-#!perl -T
+#!/usr/bin/perl -T
 
 use lib 't/lib';
 use strict;
 use warnings 'all';
 
-use Test::More tests => 4;
-use Test::Exception 0.03;
+use Test::More tests => 6;
+use Test::Fatal;
 use Test::Net::SAJAX::UserAgent;
 
 use Net::SAJAX;
@@ -20,31 +20,37 @@ my $sajax = new_ok('Net::SAJAX' => [
 ###########################################################################
 # REQUEST WITH HTML AT TOP
 {
+	my $data;
+
 	# Disable autocleaning
 	$sajax->autoclean_garbage(0);
 
-	dies_ok(sub {$sajax->call(
+	isnt(exception {$sajax->call(
 		function  => 'Echo',
 		arguments => ["<html><head>\n\n+:var res='test'; res;"],
-	)}, 'HTML at beginning caused failure');
+	)}, undef, 'HTML at beginning caused failure');
 
 	# Enable autocleaning
 	$sajax->autoclean_garbage(1);
 
-	lives_and(sub {is($sajax->call(
+	is(exception {$data = $sajax->call(
 		function  => 'Echo',
-		arguments => ["<html><head>\n\n+:'test';"],
-	), 'test')}, 'Cleaned HTML at beginning');
+		arguments => ["<html><head>\n\n+:var res='test'; res;"],
+	)}, undef, 'HTML at beginning did not cause failure');
+	is($data, 'test', 'Cleaned HTML at beginning');
 }
 
 ###########################################################################
 # REQUEST WITH LOTS OF PHP GARBAGE
 {
+	my $data;
+
 	# Enable autocleaning
 	$sajax->autoclean_garbage(1);
 
-	lives_and(sub {is($sajax->call(
+	is(exception {$data = $sajax->call(
 		function  => 'Echo',
 		arguments => ["<html><head>\n\n<body>+:var res='test'; res;</body></html>"],
-	), 'test')}, 'Lots of garbage with PHP response');
+	)}, undef, 'Lots of garbage with PHP response');
+	is($data, 'test', 'Garbage cleaned');
 }

@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.106';
+our $VERSION   = '0.107';
 
 ###############################################################################
 # MOOSE
@@ -46,7 +46,7 @@ during reading of the response
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX::Exception::Response> version 0.106
+This documentation refers to version 0.107
 
 =head1 SYNOPSIS
 
@@ -60,19 +60,20 @@ This documentation refers to L<Net::SAJAX::Exception::Response> version 0.106
 =head1 DESCRIPTION
 
 This is an exception class for exceptions that occur during reading of the
-server response in the L<Net::SAJAX> library.
+server response in the L<Net::SAJAX library|Net::SAJAX>.
 
 =head1 INHERITANCE
 
-This class inherits from the base class of L<Net::SAJAX::Exception> and all
-attributes and methods in that class are also in this class.
+This class inherits from the base class of
+L<Net::SAJAX::Exception|Net::SAJAX::Exception> and all attributes and
+methods in that class are also in this class.
 
 =head1 ATTRIBUTES
 
 =head2 response
 
-B<Required>. This is a L<HTTP::Response> object that contains the response that
-generated the exception.
+B<Required>. This is a L<HTTP::Response|HTTP::Response> object that
+contains the response that generated the exception.
 
 =head1 METHODS
 
@@ -82,13 +83,13 @@ This class does not contain any methods.
 
 =over
 
-=item * L<Moose> 0.77
+=item * L<Moose|Moose> 0.77
 
-=item * L<MooseX::StrictConstructor> 0.08
+=item * L<MooseX::StrictConstructor|MooseX::StrictConstructor> 0.08
 
-=item * L<Net::SAJAX::Exception>
+=item * L<Net::SAJAX::Exception|Net::SAJAX::Exception>
 
-=item * L<namespace::clean> 0.04
+=item * L<namespace::clean|namespace::clean> 0.04
 
 =back
 

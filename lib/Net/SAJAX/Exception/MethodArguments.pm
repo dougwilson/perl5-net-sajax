@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.106';
+our $VERSION   = '0.107';
 
 ###############################################################################
 # MOOSE
@@ -58,8 +58,7 @@ occur when bad arguments are provided to a method.
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX::Exception::MethodArguments> version
-0.106
+This documentation refers to version 0.107
 
 =head1 SYNOPSIS
 
@@ -72,12 +71,13 @@ This documentation refers to L<Net::SAJAX::Exception::MethodArguments> version
 =head1 DESCRIPTION
 
 This is an exception class for when a bad argument is provided to a method in
-the L<Net::SAJAX> library.
+the L<Net::SAJAX library|Net::SAJAX>.
 
 =head1 INHERITANCE
 
-This class inherits from the base class of L<Net::SAJAX::Exception> and all
-attributes and methods in that class are also in this class.
+This class inherits from the base class of
+L<Net::SAJAX::Exception|Net::SAJAX::Exception> and all attributes and
+methods in that class are also in this class.
 
 =head1 ATTRIBUTES
 
@@ -110,13 +110,13 @@ This class does not contain any methods.
 
 =over
 
-=item * L<Moose> 0.77
+=item * L<Moose|Moose> 0.77
 
-=item * L<MooseX::StrictConstructor> 0.08
+=item * L<MooseX::StrictConstructor|MooseX::StrictConstructor> 0.08
 
-=item * L<Net::SAJAX::Exception>
+=item * L<Net::SAJAX::Exception|Net::SAJAX::Exception>
 
-=item * L<namespace::clean> 0.04
+=item * L<namespace::clean|namespace::clean> 0.04
 
 =back
 

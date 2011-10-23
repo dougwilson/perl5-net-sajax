@@ -1,11 +1,11 @@
-#!perl -T
+#!/usr/bin/perl -T
 
 use lib 't/lib';
 use strict;
 use warnings 'all';
 
-use Test::More tests => 14;
-use Test::Exception 0.03;
+use Test::More tests => 16;
+use Test::Fatal;
 use Test::Net::SAJAX::UserAgent;
 
 use Net::SAJAX;
@@ -23,16 +23,16 @@ my $sajax = new_ok('Net::SAJAX' => [
 	my $number;
 
 	# GET A RANDOM NUMBER
-	lives_ok(sub {$number = $sajax->call(function => 'GetNumber')}, 'Get a number');
+	is(exception {$number = $sajax->call(function => 'GetNumber')}, undef, 'Get a number');
 	like($number, qr{\A \d+ \z}msx, 'Got a number');
-	lives_ok(sub {$number = $sajax->call(function => 'GetNumber')}, 'Get a number');
+	is(exception {$number = $sajax->call(function => 'GetNumber')}, undef, 'Get a number');
 	like($number, qr{\A \d+ \z}msx, 'Got a number');
 
 	# ECHO BACK THE SUPPLIED NUMBER
-	lives_ok(sub {$number = $sajax->call(
+	is(exception {$number = $sajax->call(
 		function  => 'GetNumber',
 		arguments => [1234]
-	)}, 'Get a number');
+	)}, undef, 'Get a number');
 	is($number, 1234, 'Got expected number');
 }
 
@@ -42,26 +42,32 @@ my $sajax = new_ok('Net::SAJAX' => [
 	my $data;
 
 	# Non-existant function
-	dies_ok(sub {$sajax->call(function => 'IDoNotExist')}, 'Call a bad function');
+	isnt(exception {$sajax->call(function => 'IDoNotExist')}, undef, 'Call a bad function');
 
 	# Function stripping whitespace
-	lives_ok(sub {$data = $sajax->call(
+	is(exception {$data = $sajax->call(
 		function  => 'Echo',
 		arguments => ["      \n\n\n\n\t+:'I am test :)'   \n\n\n\n"],
-	)}, 'Function returns lots of whitespace');
+	)}, undef, 'Function returns lots of whitespace');
 	is($data, 'I am test :)', 'Whitespace stripped as expected');
 }
 
 ###########################################################################
 # REQUEST WITH TARGET ID
 {
-	lives_ok { $sajax->target_id('test_target'); } 'Set the target id';
-	lives_and { is $sajax->call(function => 'EchoTargetId'), 'test_target'; } 'Request with target ID';
+	my $data;
+
+	is(exception { $sajax->target_id('test_target') }, undef, 'Set the target id');
+	is(exception { $data = $sajax->call(function => 'EchoTargetId') }, undef, 'Request with target ID');
+	is($data, 'test_target', 'Got request ID back');
 }
 
 ###########################################################################
 # REQUEST WITH RANDOM KEY
 {
-	lives_ok { $sajax->send_rand_key(1); } 'Send the random key with requests';
-	lives_and { like $sajax->call(function => 'EchoRandKey'), qr{\A \d+ \z}msx; } 'Request with random key';
+	my $data;
+
+	is(exception { $sajax->send_rand_key(1) }, undef, 'Send the random key with requests');
+	is(exception { $data = $sajax->call(function => 'EchoRandKey') }, undef, 'Request with random key');
+	like($data, qr{\A \d+ \z}msx, 'Got request random key');
 }

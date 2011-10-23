@@ -1,4 +1,4 @@
-Net-SAJAX version 0.106
+Net-SAJAX version 0.107
 =======================
 
 See the individual module documentation for more information
@@ -8,10 +8,10 @@ INSTALLATION
 
 To install this module, run the following commands:
 
-    perl Makefile.PL
-    make
-    make test
-    make install
+    perl Build.PL
+    perl Build
+    perl Build test
+    perl Build install
 
 SUPPORT AND DOCUMENTATION
 -------------------------

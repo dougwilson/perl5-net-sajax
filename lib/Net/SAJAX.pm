@@ -7,7 +7,7 @@ use warnings 'all';
 ###############################################################################
 # METADATA
 our $AUTHORITY = 'cpan:DOUGDUDE';
-our $VERSION   = '0.106';
+our $VERSION   = '0.107';
 
 ###############################################################################
 # MOOSE
@@ -334,7 +334,7 @@ Net::SAJAX - Interact with remote applications that use SAJAX.
 
 =head1 VERSION
 
-This documentation refers to L<Net::SAJAX> version 0.106
+This documentation refers to version 0.107
 
 =head1 SYNOPSIS
 
@@ -412,7 +412,7 @@ This is a Boolean of whether or not the object has a L</target_id> set.
 
 =head2 javascript_engine
 
-This is a L<JE> object that is used to evaluate the JavaScript data received.
+This is a L<JE|JE> object that is used to evaluate the JavaScript data received.
 Since this is a custom engine in Perl, the JavaScript executed should not have
 any security affects. This defaults to C<< JE->new(max_ops => 1000) >>.
 
@@ -449,13 +449,13 @@ from the object, restoring default behavior.
 
 =head2 url
 
-B<Required>. This is a L<URI> object of the URL of the SAJAX application.
+B<Required>. This is a L<URI|URI> object of the URL of the SAJAX application.
 
 =head2 user_agent
 
-This is the L<LWP::UserAgent> object to use when making requests. This is
-provided to handle custom user agents. The default value is LWP::UserAgent
-constructed with no arguments.
+This is the L<LWP::UserAgent|LWP::UserAgent> object to use when making
+requests. This is provided to handle custom user agents. The default value
+is LWP::UserAgent constructed with no arguments.
 
   # Set a low timeout value
   $sajax->user_agent->timeout(10);
@@ -510,31 +510,31 @@ object to no longer send a L</target_id> with the request.
 
 =head1 DIAGNOSTICS
 
-This module, as of version 0.102, will throw L<Net::SAJAX::Exception> objects
-on errors. This means that all method return values are guaranteed to be
-correct. Please read the relevant exception classes to find out what objects
-will be thrown. Depend on at least 0.102 if you want to use object-based
-exception.
+This module, as of version 0.102, will throw
+L<Net::SAJAX::Exception|Net::SAJAX::Exception> objects on errors. This means
+that all method return values are guaranteed to be correct. Please read the
+relevant exception classes to find out what objects will be thrown. Depend
+on at least 0.102 if you want to use object-based exception.
 
 =over
 
-=item * L<Net::SAJAX::Exception> for general exceptions not in other categories
-and the base class.
+=item * L<Net::SAJAX::Exception|Net::SAJAX::Exception> for general
+exceptions not in other categories and the base class.
 
-=item * L<Net::SAJAX::Exception::JavaScriptConversion> for errors during the
-conversion of JavaScript structure to native Perl structure.
+=item * L<Net::SAJAX::Exception::JavaScriptConversion|Net::SAJAX::Exception::JavaScriptConversion>
+for errors during the conversion of JavaScript structure to native Perl structure.
 
-=item * L<Net::SAJAX::Exception::JavaScriptEvaluation> for errors during the
-evaluation of JavaScript returned by the server.
+=item * L<Net::SAJAX::Exception::JavaScriptEvaluation|Net::SAJAX::Exception::JavaScriptEvaluation>
+for errors during the evaluation of JavaScript returned by the server.
 
-=item * L<Net::SAJAX::Exception::MethodArguments> for errors related to the
-values of arguments given to methods.
+=item * L<Net::SAJAX::Exception::MethodArguments|Net::SAJAX::Exception::MethodArguments>
+for errors related to the values of arguments given to methods.
 
-=item * L<Net::SAJAX::Exception::RemoteError> for remote errors returned by
-SAJAX itself.
+=item * L<Net::SAJAX::Exception::RemoteError|Net::SAJAX::Exception::RemoteError>
+for remote errors returned by SAJAX itself.
 
-=item * L<Net::SAJAX::Exception::Response> for errors in the HTTP response
-from the server.
+=item * L<Net::SAJAX::Exception::Response|Net::SAJAX::Exception::Response>
+for errors in the HTTP response from the server.
 
 =back
 
@@ -543,33 +543,33 @@ from the server.
 This module has a version number in the format of C<< \d+\.\d{3} >>. When the
 digit to the left of the decimal point is incremented, this means that this
 module was changed in such a way that it will very likely break code that uses
-it. Please see L<Net::SAJAX::VersionGuarantee>.
+it. Please see L<Net::SAJAX::VersionGuarantee|Net::SAJAX::VersionGuarantee>.
 
 =head1 DEPENDENCIES
 
 =over 4
 
-=item * L<English>
+=item * L<English|English>
 
-=item * L<HTTP::Request::Common> 5.814
+=item * L<HTTP::Request::Common|HTTP::Request::Common> 5.814
 
-=item * L<JE> 0.033
+=item * L<JE|JE> 0.033
 
-=item * L<List::MoreUtils>
+=item * L<List::MoreUtils|List::MoreUtils>
 
-=item * L<LWP::UserAgent> 5.819
+=item * L<LWP::UserAgent|LWP::UserAgent> 5.819
 
-=item * L<Moose> 0.77
+=item * L<Moose|Moose> 0.77
 
-=item * L<MooseX::StrictConstructor> 0.08
+=item * L<MooseX::StrictConstructor|MooseX::StrictConstructor> 0.08
 
-=item * L<MooseX::Types::URI> 0.02
+=item * L<MooseX::Types::URI|MooseX::Types::URI> 0.02
 
-=item * L<URI> 1.22
+=item * L<URI|URI> 1.22
 
-=item * L<URI::QueryParam>
+=item * L<URI::QueryParam|URI::QueryParam>
 
-=item * L<namespace::clean> 0.04
+=item * L<namespace::clean|namespace::clean> 0.04
 
 =back
 

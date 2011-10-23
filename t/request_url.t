@@ -1,11 +1,10 @@
-#!perl -T
+#!/usr/bin/perl -T
 
 use lib 't/lib';
 use strict;
 use warnings 'all';
 
 use Test::More tests => 7;
-use Test::Exception 0.03;
 use Test::Net::SAJAX::UserAgent;
 
 use Net::SAJAX;
